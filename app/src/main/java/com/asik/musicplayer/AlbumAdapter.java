@@ -78,7 +78,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
 
         public void setAlbum(AlbumModel albumModel, int position) {
             albumName.setText(albumModel.getName());
-            albumName.setSelected(true);
             artistName.setText(albumModel.getFeaturedArtists());
             Glide.with(homepageActivity).load(albumModel.getImage()).into(imageAlbum);
 
@@ -88,6 +87,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                 BottomSheetDialog dialog = new BottomSheetDialog(homepageActivity);
                 dialog.setContentView(LayoutInflater.from(homepageActivity).inflate(R.layout.songlis_bottomsheet, null));
                 TextView albname = dialog.findViewById(R.id.albumName);
+                albname.setSelected(true);
                 albname.setText(albumModel.getName());
                 String ALBUM_API = "https://saavn.me/albums?link="+albumModel.getUrl();
                 Log.d("debugTest", ALBUM_API);

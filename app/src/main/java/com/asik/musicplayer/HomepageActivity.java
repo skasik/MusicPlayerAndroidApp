@@ -2,11 +2,15 @@ package com.asik.musicplayer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.window.OnBackInvokedDispatcher;
 
@@ -16,6 +20,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,12 +38,28 @@ public class HomepageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
+
+
+        View playing = findViewById(R.id.playing);
+        CardView playingImage = findViewById(R.id.card);
+
+        playingImage.setOnClickListener(v -> {
+            openPlayerScreen();
+        });
+
+        playing.setOnClickListener(v -> {
+            openPlayerScreen();
+        });
+
+//        loadHomePage("hindi,english,bengali");
+        loadHomePage("hindi");
+    }
+
+    private void loadHomePage(String language){
         ArrayList<SongModel> songs = new ArrayList<>();
         ArrayList<AlbumModel> albums = new ArrayList<>();
 
-
-        String API_LINK = "https://saavn.me/modules?language=hindi,english,bengali";
-
+        String API_LINK = "https://saavn.me/modules?language="+language;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API_LINK, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -108,6 +130,7 @@ public class HomepageActivity extends AppCompatActivity {
                     songAD.setAdapter(new SongAdapter(songs, HomepageActivity.this));
                     songAD.setLayoutManager(new LinearLayoutManager(HomepageActivity.this,LinearLayoutManager.VERTICAL,false));
                     songAD.setHasFixedSize(true);
+                    songAD.setNestedScrollingEnabled(false);
 
 
 
@@ -125,8 +148,6 @@ public class HomepageActivity extends AppCompatActivity {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
-
-
     }
 
     public static SongModel AlbumToSong(AlbumModel albumModel){
@@ -139,5 +160,14 @@ public class HomepageActivity extends AppCompatActivity {
         songModel.setDuration(albumModel.getPlayCount());
 
         return songModel;
+    }
+
+
+    public void openPlayerScreen(){
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        dialog.setContentView(LayoutInflater.from(this).inflate(R.layout.playing_music, null));
+
+
+        dialog.show();
     }
 }

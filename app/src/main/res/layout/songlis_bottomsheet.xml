@@ -16,7 +16,6 @@
         android:ellipsize="marquee"
         android:fontFamily="@font/poppins_semibold"
         android:marqueeRepeatLimit="marquee_forever"
-        android:maxLines="1"
         android:paddingStart="15dp"
         android:scrollHorizontally="true"
         android:singleLine="true"

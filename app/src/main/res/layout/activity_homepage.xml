@@ -10,9 +10,9 @@
 
     <ScrollView
         android:id="@+id/scrollbar"
-        android:layout_above="@id/seekbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomParent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -65,117 +65,118 @@
 
     </ScrollView>
 
-    <SeekBar
-        android:id="@+id/seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_above="@id/bottomParent"
-        android:theme="@style/MySeekBar"
-
-        />
-
     <RelativeLayout
+        android:paddingTop="10dp"
         android:id="@+id/bottomParent"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@id/seekbar"
+        android:layout_marginHorizontal="20dp"
         android:background="@color/white"
         android:paddingBottom="5dp">
 
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
 
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="10dp"
-
-                >
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="20dp">
-
-                    <ImageView
-                        android:id="@+id/songImage"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentStart="true" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-            <LinearLayout
-                android:id="@+id/playing"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/btnAreas"
-                android:layout_toEndOf="@id/card"
-                android:orientation="vertical"
-                android:paddingStart="20dp">
-
-                <TextView
-                    android:id="@+id/selectedMusic"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/card"
-                    android:fontFamily="@font/poppins_semibold"
-                    android:paddingBottom="3dp"
-                    android:text="Music Name Here"
-                    android:textColor="@color/black"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/selectedArtist"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
-                    android:text="Artist Name"
-                    android:textColor="#393939"
-                    android:textSize="12sp" />
-            </LinearLayout>
+            >
 
             <LinearLayout
-                android:id="@+id/btnAreas"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-
-                >
+                android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/playButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/play"
-
-
-                    />
-
-                <ImageView
-                    android:id="@+id/pauseButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/pause"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/nextButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/next"
+                    android:id="@+id/songImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
 
                     />
 
             </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
+        <LinearLayout
+            android:id="@+id/playing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/btnAreas"
+            android:layout_toEndOf="@id/card"
+            android:orientation="vertical"
+            android:paddingStart="20dp">
+
+            <TextView
+                android:id="@+id/selectedMusic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/card"
+                android:fontFamily="@font/poppins_semibold"
+                android:paddingBottom="3dp"
+                android:text="Music Name Here"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/selectedArtist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="Artist Name"
+                android:textColor="#393939"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnAreas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+
+            >
+
+            <ImageView
+                android:id="@+id/playButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:src="@drawable/play"
+
+
+                />
+
+            <ImageView
+                android:id="@+id/pauseButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:src="@drawable/pause"
+                android:visibility="gone" />
+
+            <!--                <ImageView-->
+            <!--                    android:id="@+id/nextButton"-->
+            <!--                    android:layout_width="40dp"-->
+            <!--                    android:layout_height="40dp"-->
+            <!--                    android:layout_gravity="center"-->
+            <!--                    android:src="@drawable/next"-->
+
+            <!--                    />-->
+
+        </LinearLayout>
 
 
     </RelativeLayout>
 
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_alignParentBottom="true"
+        android:progressDrawable="@drawable/seekbar_main_drawable"
+        android:splitTrack="false"
+        android:thumb="@drawable/seekbar_thumb" />
 
 </RelativeLayout>

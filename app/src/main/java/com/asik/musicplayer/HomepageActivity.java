@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.window.OnBackInvokedDispatcher;
 
@@ -20,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -32,6 +34,10 @@ import java.util.ArrayList;
 public class HomepageActivity extends AppCompatActivity {
 
     MediaPlayer player;
+    ArrayList<SongModel> currentlyPlaying =new ArrayList<>();
+    int curPos = 0;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +57,9 @@ public class HomepageActivity extends AppCompatActivity {
             openPlayerScreen();
         });
 
-//        loadHomePage("hindi,english,bengali");
-        loadHomePage("hindi");
+
+        loadHomePage("hindi,english,bengali");
+//        loadHomePage("hindi");
     }
 
     private void loadHomePage(String language){
@@ -165,9 +172,34 @@ public class HomepageActivity extends AppCompatActivity {
 
     public void openPlayerScreen(){
         BottomSheetDialog dialog = new BottomSheetDialog(this);
-        dialog.setContentView(LayoutInflater.from(this).inflate(R.layout.playing_music, null));
+        View contentView = LayoutInflater.from(this).inflate(R.layout.playing_music, null);
+        dialog.setContentView(contentView);
+//        View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        View bottomSheet = (View) contentView.getParent();
+        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+
+        TextView songName = dialog.findViewById(R.id.songName);
+        TextView artistName = dialog.findViewById(R.id.artistName);
+
+        songName.setText(currentlyPlaying.get(curPos).getName());
+        artistName.setText(currentlyPlaying.get(curPos).getFeaturedArtists());
+
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED); // Set the initial state to expanded
+//        behavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottomsheet_height));
 
 
         dialog.show();
+    }
+
+    public void updateCurrentPlaying(SongModel songModel){
+        TextView songName = findViewById(R.id.selectedMusic);
+        TextView artistName = findViewById(R.id.selectedArtist);
+        ImageView songImage = findViewById(R.id.songImage);
+        View parent = findViewById(R.id.bottomParent);
+        parent.setVisibility(View.VISIBLE);
+
+        Glide.with(this).load(songModel.getImage()).into(songImage);
+        songName.setText(songModel.getName());
+        artistName.setText(songModel.getFeaturedArtists());
     }
 }

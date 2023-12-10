@@ -80,12 +80,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             Glide.with(homepageActivity).load(songModel.getImage()).into(songImage);
 
             playMusic.setOnClickListener(v -> {
-                if (songModel.getDownloadUrl().equals("")) fetchSongDownloadURL(songModel);
-                else startPlayingSong(songModel);
+                if (songModel.getDownloadUrl().equals("")) fetchSongDownloadURL(songModel, position);
+                else startPlayingSong(songModel, position);
             });
         }
 
-        void startPlayingSong(SongModel songModel) {
+        void startPlayingSong(SongModel songModel, int pos) {
             try {
                 if (homepageActivity.player != null){
                     homepageActivity.player.stop();
@@ -99,13 +99,18 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                 homepageActivity.player.setOnPreparedListener(mp -> {
                     mp.start();
                 });
+
+                homepageActivity.currentlyPlaying = musics;
+                homepageActivity.curPos = pos;
+                homepageActivity.updateCurrentPlaying(songModel);
+
             } catch (Exception e) {
                 Toast.makeText(homepageActivity, "Unable to play this song", Toast.LENGTH_SHORT).show();
             }
         }
 
 
-        void fetchSongDownloadURL(SongModel song) {
+        void fetchSongDownloadURL(SongModel song, int pos) {
             String API_LINK = "https://saavn.me/songs?link=" + song.getUrl();
             Toast.makeText(homepageActivity, "Loading song...", Toast.LENGTH_SHORT).show();
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API_LINK, new Response.Listener<JSONObject>() {
@@ -116,7 +121,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                         JSONObject data = response.getJSONArray("data").getJSONObject(0);
                         JSONArray downloadUrls = data.getJSONArray("downloadUrl");
                         song.setDownloadUrl(downloadUrls.getJSONObject(downloadUrls.length()-1).getString("link"));
-                        startPlayingSong(song);
+                        startPlayingSong(song, pos);
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(homepageActivity, "failed to load the song", Toast.LENGTH_SHORT).show();

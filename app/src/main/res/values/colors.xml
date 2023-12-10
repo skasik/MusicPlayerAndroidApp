@@ -6,4 +6,5 @@
     <color name="col2">#1B2AB1</color>
     <color name="col3">#8FD809</color>
     <color name="gray">#FF989898</color>
+    <color name="transparent">#00000000</color>
 </resources>

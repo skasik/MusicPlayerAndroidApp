@@ -90,6 +90,7 @@ public class HomepageActivity extends AppCompatActivity {
     private void loadHomePage(String language) {
         ArrayList<SongModel> songs = new ArrayList<>();
         ArrayList<AlbumModel> albums = new ArrayList<>();
+        ArrayList<AlbumModel> trendingAlbums = new ArrayList<>();
 
         String API_LINK = "https://saavn.me/modules?language=" + language;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API_LINK, new Response.Listener<JSONObject>() {
@@ -126,10 +127,45 @@ public class HomepageActivity extends AppCompatActivity {
                             songs.add(AlbumToSong(albumModel));
                         } else albums.add(albumModel);
                     }
+
+
+                    album = albumData.getJSONObject("trending").getJSONArray("albums");
+
+                    for (int i = 0; i < album.length(); ++i) {
+                        String type = album.getJSONObject(i).getString("type");
+
+                        AlbumModel albumModel = new AlbumModel();
+                        albumModel.setId(album.getJSONObject(i).getString("id"));
+                        albumModel.setName(album.getJSONObject(i).getString("name"));
+                        albumModel.setUrl(album.getJSONObject(i).getString("url"));
+                        JSONArray artists = album.getJSONObject(i).getJSONArray("artists");
+                        String featuredArtists = "";
+                        for (int j = 0; j < artists.length(); ++j) {
+                            if (!featuredArtists.equals(""))
+                                featuredArtists += ", ";
+                            featuredArtists += artists.getJSONObject(j).getString("name");
+                        }
+                        albumModel.setPlayCount(album.getJSONObject(i).getString("playCount"));
+                        albumModel.setFeaturedArtists(featuredArtists);
+                        JSONArray image = album.getJSONObject(i).getJSONArray("image");
+                        albumModel.setImage(image.getJSONObject(image.length() - 1).getString("link"));
+                        albumModel.setThumbnail(image.getJSONObject(0).getString("link"));
+//                        albumModel.setSongs();
+
+
+                        if (type.equals("song")) {
+                            songs.add(AlbumToSong(albumModel));
+                        } else trendingAlbums.add(albumModel);
+                    }
                     RecyclerView albumAD = findViewById(R.id.albumRV);
                     albumAD.setAdapter(new AlbumAdapter(albums, HomepageActivity.this));
                     albumAD.setLayoutManager(new LinearLayoutManager(HomepageActivity.this, LinearLayoutManager.HORIZONTAL, false));
                     albumAD.setHasFixedSize(true);
+
+                    RecyclerView trendingAlbumAD = findViewById(R.id.trendingAlbumRV);
+                    trendingAlbumAD.setAdapter(new AlbumAdapter(trendingAlbums, HomepageActivity.this));
+                    trendingAlbumAD.setLayoutManager(new LinearLayoutManager(HomepageActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                    trendingAlbumAD.setHasFixedSize(true);
 
                     JSONArray song = albumData.getJSONObject("trending").getJSONArray("songs");
                     for (int j = 0; j < song.length(); j++) {

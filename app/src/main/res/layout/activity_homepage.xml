@@ -59,6 +59,24 @@
                 android:overScrollMode="never"
                 android:scrollbars="none" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/poppins_extrabold"
+                android:text="Trending Now"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/trendingAlbumRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:scrollbars="none" />
+
 
         </LinearLayout>
 

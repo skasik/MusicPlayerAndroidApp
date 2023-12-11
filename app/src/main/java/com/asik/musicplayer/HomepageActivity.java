@@ -132,6 +132,7 @@ public class HomepageActivity extends AppCompatActivity {
         ArrayList<SongModel> songs = new ArrayList<>();
         ArrayList<AlbumModel> albums = new ArrayList<>();
         ArrayList<AlbumModel> trendingAlbums = new ArrayList<>();
+        ArrayList<PlaylistModel> playlists = new ArrayList<>();
 
         String API_LINK = "https://saavn.me/modules?language=" + language;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API_LINK, new Response.Listener<JSONObject>() {
@@ -168,6 +169,25 @@ public class HomepageActivity extends AppCompatActivity {
                             songs.add(AlbumToSong(albumModel));
                         } else albums.add(albumModel);
                     }
+
+                    JSONArray playlist = albumData.getJSONArray("playlists");
+                    for (int i = 0;i<playlist.length();i++){
+                        PlaylistModel playlistModel = new PlaylistModel();
+                        playlistModel.setId(playlist.getJSONObject(i).getString("id"));
+                        playlistModel.setName(playlist.getJSONObject(i).getString("title"));
+                        playlistModel.setSubtitle(playlist.getJSONObject(i).getString("subtitle"));
+                        playlistModel.setUrl(playlist.getJSONObject(i).getString("url"));
+                        JSONArray images = playlist.getJSONObject(i).getJSONArray("image");
+                        playlistModel.setImage(images.getJSONObject(images.length()-1).getString("link"));
+
+                        playlists.add(playlistModel);
+
+                    }
+                    RecyclerView playlistAD = findViewById(R.id.playlistRV);
+                    playlistAD.setAdapter(new PlaylistAdapter(playlists,HomepageActivity.this));
+                    playlistAD.setLayoutManager(new LinearLayoutManager(HomepageActivity.this,RecyclerView.HORIZONTAL,false));
+                    playlistAD.setHasFixedSize(true);
+
 
 
                     album = albumData.getJSONObject("trending").getJSONArray("albums");
@@ -448,17 +468,6 @@ public class HomepageActivity extends AppCompatActivity {
         SeekBar seekPlaying = dialog.findViewById(R.id.seekPlaying);
 
 
-//        ImageView playPlaying = dialog.findViewById(R.id.playButton);
-//        ImageView pausePlaying = dialog.findViewById(R.id.pauseButton);
-
-//        if (player != null && player.isPlaying()) {
-//            playPlaying.setVisibility(View.GONE);
-//            pausePlaying.setVisibility(View.VISIBLE);
-//        }
-//        if (player != null && !player.isPlaying()) {
-//            pausePlaying.setVisibility(View.GONE);
-//            playPlaying.setVisibility(View.VISIBLE);
-//        }
 
 
         new Handler().postDelayed(() -> {
@@ -476,7 +485,7 @@ public class HomepageActivity extends AppCompatActivity {
             currentTime.setText(SongModel.convertDuration(Integer.valueOf(seekPlaying.getProgress() / 1000)));
 
             if (player == null) seekPlaying.setProgress(0);
-            else if (player != null && player.isPlaying()) {
+            else if (player != null) {
 //                seekPlaying.setProgress(seekBar.getProgress()+10);
                 seekPlaying.setProgress(player.getCurrentPosition());
             }

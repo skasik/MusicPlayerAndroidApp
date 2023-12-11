@@ -54,13 +54,7 @@ public class SongModel {
     }
 
     public String getDuration() {
-        String min =String.valueOf(duration/60);
-        String sec = String.valueOf(duration%60);
-        if ((duration/60)<10) min = "0"+min;
-        if ((duration%60)<10) sec = "0"+sec;
-
-        if ((duration/60) > 20) return "";
-        return min + ":"+sec;
+        return convertDuration(this.duration);
     }
 
     public void setDuration(int duration){
@@ -121,5 +115,15 @@ public class SongModel {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public static String convertDuration(int duration){
+        String min =String.valueOf(duration/60);
+        String sec = String.valueOf(duration%60);
+        if ((duration/60)<10) min = "0"+min;
+        if ((duration%60)<10) sec = "0"+sec;
+
+        if ((duration/60) > 20) return "";
+        return min + ":"+sec;
     }
 }

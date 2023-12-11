@@ -1,8 +1,10 @@
 package com.asik.musicplayer;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONArray;
@@ -85,7 +88,14 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
             album.setOnClickListener(v -> {
                 ArrayList<SongModel> songsOfThisAlbum = new ArrayList<>();
                 BottomSheetDialog dialog = new BottomSheetDialog(homepageActivity);
-                dialog.setContentView(LayoutInflater.from(homepageActivity).inflate(R.layout.songlis_bottomsheet, null));
+
+                View contentView = LayoutInflater.from(homepageActivity).inflate(R.layout.songlis_bottomsheet, null);
+                dialog.setContentView(contentView);
+
+                View bottomSheet = (View) contentView.getParent();
+                BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED); // Set the initial state to expanded
+
                 TextView albname = dialog.findViewById(R.id.albumName);
                 albname.setSelected(true);
                 albname.setText(albumModel.getName());
@@ -108,7 +118,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                                 JSONArray image = songsAPI.getJSONObject(i).getJSONArray("image");
                                 songsObject.setImage(image.getJSONObject(image.length()-1).getString("link"));
 //                                songsObject.setThumbnail(image.getJSONObject(0).getString("link"));
-                                songsObject.setThumbnail(albumModel.getThumbnail());
+                                songsObject.setThumbnail(albumModel.getImage());
                                 JSONArray downloadURLs = songsAPI.getJSONObject(i).getJSONArray("downloadUrl");
                                 songsObject.setDownloadUrl(downloadURLs.getJSONObject(downloadURLs.length()-1).getString("link"));
 

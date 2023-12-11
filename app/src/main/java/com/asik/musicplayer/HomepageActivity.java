@@ -208,6 +208,11 @@ public class HomepageActivity extends AppCompatActivity {
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED); // Set the initial state to expanded
 
+        ImageView dismiss = dialog.findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
         dialog.setOnDismissListener(dialog1 -> {
             isPlayerScreenShown = false;
         });

@@ -96,6 +96,11 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                 BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED); // Set the initial state to expanded
 
+                ImageView dismiss = dialog.findViewById(R.id.dismiss);
+                dismiss.setOnClickListener(v1 -> {
+                    dialog.dismiss();
+                });
+
                 TextView albname = dialog.findViewById(R.id.albumName);
                 albname.setSelected(true);
                 albname.setText(albumModel.getName());

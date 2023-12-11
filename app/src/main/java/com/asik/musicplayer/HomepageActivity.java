@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -81,6 +82,46 @@ public class HomepageActivity extends AppCompatActivity {
 
 
         });
+
+        ArrayList<LanguageModel> languageModels = new ArrayList<>();
+        languageModels.add(new LanguageModel("For You", "hindi,english,bengali", R.id.allSong));
+        languageModels.add(new LanguageModel("Hindi", R.id.hindiSong));
+        languageModels.add(new LanguageModel("Bengali", R.id.bengaliSong));
+        languageModels.add(new LanguageModel("English", R.id.englishSong));
+        languageModels.add(new LanguageModel("Punjabi", R.id.punjabiSong));
+        languageModels.add(new LanguageModel("Bhojpuri", R.id.bhojpuriSong));
+        languageModels.add(new LanguageModel("Urdu", R.id.urduSong));
+        languageModels.add(new LanguageModel("Gujarati", R.id.gujratiSong));
+        languageModels.add(new LanguageModel("Odia", R.id.odiaSong));
+        languageModels.add(new LanguageModel("Rajasthani", R.id.rajasthaniSong));
+        languageModels.add(new LanguageModel("Haryanvi", R.id.haryanviSong));
+        languageModels.add(new LanguageModel("Malayalam", R.id.malayalamSong));
+        languageModels.add(new LanguageModel("Marathi", R.id.marathiSong));
+        languageModels.add(new LanguageModel("Tamil", R.id.tamilSong));
+        languageModels.add(new LanguageModel("Telugu", R.id.teleguSong));
+
+
+
+        languageModels.forEach(languageModel -> {
+            Button btn = findViewById(languageModel.getButtonId());
+            btn.setOnClickListener(v -> {
+                loadHomePage(languageModel.getParameter());
+                languageModels.forEach(languageModel1 -> {
+                    Button btn2 = findViewById(languageModel1.getButtonId());
+                    btn2.setBackgroundColor(getResources().getColor(R.color.gray));
+                });
+                btn.setBackgroundColor(getResources().getColor(R.color.black));
+            });
+            btn.setTextColor(getResources().getColor(R.color.white));
+
+        });
+
+        ((Button)findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.black));
+
+
+//        ((Button)findViewById(R.id.allSong)).setOnClickListener(v -> {
+//            loadHomePage("hindi,english,bengali");
+//        });
 
 
         loadHomePage("hindi,english,bengali");

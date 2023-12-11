@@ -35,19 +35,19 @@
         android:layout_marginHorizontal="20dp"
         android:ellipsize="marquee"
         android:fontFamily="@font/poppins"
-        android:singleLine="true"
         android:marqueeRepeatLimit="marquee_forever"
         android:maxWidth="180dp"
         android:maxLines="1"
         android:scrollHorizontally="true"
+        android:singleLine="true"
         android:text="Artist Name"
         android:textColor="@color/gray"
         android:textSize="12sp" />
 
     <androidx.cardview.widget.CardView
-        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         app:cardCornerRadius="20dp">
 
         <LinearLayout
@@ -124,6 +124,7 @@
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="20dp"
                 android:src="@drawable/play"
+                android:visibility="gone"
 
                 />
 
@@ -135,6 +136,15 @@
                 android:layout_marginHorizontal="20dp"
                 android:src="@drawable/pause"
                 android:visibility="gone" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/playPauseBtn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="false"
+                app:lottie_rawRes="@raw/play_btn_anim"
+                app:lottie_speed="2" />
 
             <ImageView
                 android:id="@+id/nextButton"

@@ -1,6 +1,5 @@
 package com.asik.musicplayer;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,29 +10,24 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.window.OnBackInvokedDispatcher;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -218,6 +212,22 @@ public class HomepageActivity extends AppCompatActivity {
             isPlayerScreenShown = false;
         });
 
+        LottieAnimationView playPauseBtn = dialog.findViewById(R.id.playPauseBtn);
+        playPauseBtn.setOnClickListener(v -> {
+            handlePlayPauseBtnAnim(playPauseBtn);
+        });
+        if (player != null) {
+            if (!player.isPlaying()) {
+                playPauseBtn.setMinFrame(66);
+                playPauseBtn.setMaxFrame(67);
+                playPauseBtn.playAnimation();
+            } else {
+                playPauseBtn.setMinFrame(29);
+                playPauseBtn.setMaxFrame(30);
+                playPauseBtn.playAnimation();
+            }
+        }
+
         ImageView playPlaying = dialog.findViewById(R.id.playButton);
         ImageView pausePlaying = dialog.findViewById(R.id.pauseButton);
         ImageView nextPlaying = dialog.findViewById(R.id.nextButton);
@@ -356,17 +366,17 @@ public class HomepageActivity extends AppCompatActivity {
         SeekBar seekPlaying = dialog.findViewById(R.id.seekPlaying);
 
 
-        ImageView playPlaying = dialog.findViewById(R.id.playButton);
-        ImageView pausePlaying = dialog.findViewById(R.id.pauseButton);
+//        ImageView playPlaying = dialog.findViewById(R.id.playButton);
+//        ImageView pausePlaying = dialog.findViewById(R.id.pauseButton);
 
-        if (player != null && player.isPlaying()) {
-            playPlaying.setVisibility(View.GONE);
-            pausePlaying.setVisibility(View.VISIBLE);
-        }
-        if (player != null && !player.isPlaying()) {
-            pausePlaying.setVisibility(View.GONE);
-            playPlaying.setVisibility(View.VISIBLE);
-        }
+//        if (player != null && player.isPlaying()) {
+//            playPlaying.setVisibility(View.GONE);
+//            pausePlaying.setVisibility(View.VISIBLE);
+//        }
+//        if (player != null && !player.isPlaying()) {
+//            pausePlaying.setVisibility(View.GONE);
+//            playPlaying.setVisibility(View.VISIBLE);
+//        }
 
 
         new Handler().postDelayed(() -> {
@@ -455,5 +465,21 @@ public class HomepageActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
+    }
+
+    void handlePlayPauseBtnAnim(LottieAnimationView playPauseBtn) {
+        if (player != null) {
+            if (player.isPlaying()) {
+                playPauseBtn.setMinFrame(30);
+                playPauseBtn.setMaxFrame(67);
+                playPauseBtn.playAnimation();
+                player.pause();
+            } else {
+                playPauseBtn.setMinFrame(0);
+                playPauseBtn.setMaxFrame(30);
+                playPauseBtn.playAnimation();
+                player.start();
+            }
+        }
     }
 }

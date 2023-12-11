@@ -12,6 +12,24 @@ public class AlbumModel {
     String image;
     ArrayList<SongModel> songs;
 
+    String thumbnail;
+
+    public void setSongCount(int songCount) {
+        this.songCount = songCount;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public void setPlayCount(int playCount) {
+        this.playCount = playCount;
+    }
+
     int playCount;
 
     public int getPlayCount() {
@@ -34,6 +52,8 @@ public class AlbumModel {
         this.image = "";
         this.songs = new ArrayList<>();
         this.playCount = 0;
+        this.songCount = 0;
+        this.thumbnail = "";
     }
 
     void addSong(SongModel song){

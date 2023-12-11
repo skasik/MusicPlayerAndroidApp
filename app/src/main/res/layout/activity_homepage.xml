@@ -66,15 +66,15 @@
     </ScrollView>
 
     <RelativeLayout
-        android:paddingTop="10dp"
         android:id="@+id/bottomParent"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_above="@id/seekbar"
-        android:layout_marginHorizontal="20dp"
-        android:background="@color/white"
-        android:paddingBottom="5dp">
+        android:background="@color/play_bar"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:visibility="gone">
 
 
         <androidx.cardview.widget.CardView
@@ -91,9 +91,10 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/songImage"
+                    android:id="@+id/selectedImage"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:background="@color/col2"
 
                     />
 
@@ -114,8 +115,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/card"
+                android:ellipsize="marquee"
                 android:fontFamily="@font/poppins_semibold"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
                 android:paddingBottom="3dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
                 android:text="Music Name Here"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
@@ -124,7 +130,12 @@
                 android:id="@+id/selectedArtist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="marquee"
                 android:fontFamily="@font/poppins"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
                 android:text="Artist Name"
                 android:textColor="#393939"
                 android:textSize="12sp" />

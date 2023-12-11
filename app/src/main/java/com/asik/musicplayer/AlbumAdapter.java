@@ -89,7 +89,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                 TextView albname = dialog.findViewById(R.id.albumName);
                 albname.setSelected(true);
                 albname.setText(albumModel.getName());
-                String ALBUM_API = "https://saavn.me/albums?link="+albumModel.getUrl();
+                String ALBUM_API = "https://saavn.me/albums?id="+albumModel.getId();
                 Log.d("debugTest", ALBUM_API);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(ALBUM_API, new Response.Listener<JSONObject>() {
                     @Override
@@ -107,6 +107,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                                 songsObject.setUrl(songsAPI.getJSONObject(i).getString("url"));
                                 JSONArray image = songsAPI.getJSONObject(i).getJSONArray("image");
                                 songsObject.setImage(image.getJSONObject(image.length()-1).getString("link"));
+//                                songsObject.setThumbnail(image.getJSONObject(0).getString("link"));
+                                songsObject.setThumbnail(albumModel.getThumbnail());
                                 JSONArray downloadURLs = songsAPI.getJSONObject(i).getJSONArray("downloadUrl");
                                 songsObject.setDownloadUrl(downloadURLs.getJSONObject(downloadURLs.length()-1).getString("link"));
 

@@ -10,7 +10,19 @@ public class SongModel {
     String image;
     String downloadUrl;
     String language;
+    String thumbnail;
 
+    public void setHasLyrics(boolean hasLyrics) {
+        this.hasLyrics = hasLyrics;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 
     SongModel() {
         this.downloadUrl = "";
@@ -22,6 +34,7 @@ public class SongModel {
         this.url = "";
         this.image = "";
         this.language = "";
+        this.thumbnail = "";
     }
 
     public String getId() {
@@ -45,6 +58,8 @@ public class SongModel {
         String sec = String.valueOf(duration%60);
         if ((duration/60)<10) min = "0"+min;
         if ((duration%60)<10) sec = "0"+sec;
+
+        if ((duration/60) > 20) return "";
         return min + ":"+sec;
     }
 

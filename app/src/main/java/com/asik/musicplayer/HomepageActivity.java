@@ -22,6 +22,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -36,6 +38,8 @@ public class HomepageActivity extends AppCompatActivity {
     MediaPlayer player;
     ArrayList<SongModel> currentlyPlaying =new ArrayList<>();
     int curPos = 0;
+    ImageView play;
+    ImageView pause;
 
 
 
@@ -55,6 +59,27 @@ public class HomepageActivity extends AppCompatActivity {
 
         playing.setOnClickListener(v -> {
             openPlayerScreen();
+        });
+        play = findViewById(R.id.playButton);
+        pause = findViewById(R.id.pauseButton);
+
+        play.setOnClickListener(v -> {
+            if (player!=null) {
+                player.start();
+                play.setVisibility(View.GONE);
+                pause.setVisibility(View.VISIBLE);
+            }
+
+
+        });
+        pause.setOnClickListener(v -> {
+            if (player!=null && player.isPlaying()) {
+                player.pause();
+                pause.setVisibility(View.GONE);
+                play.setVisibility(View.VISIBLE);
+            }
+
+
         });
 
 
@@ -92,7 +117,8 @@ public class HomepageActivity extends AppCompatActivity {
                         albumModel.setPlayCount(album.getJSONObject(i).getString("playCount"));
                         albumModel.setFeaturedArtists(featuredArtists);
                         JSONArray image = album.getJSONObject(i).getJSONArray("image");
-                        albumModel.setImage((image.getJSONObject(image.length() - 1).getString("link")));
+                        albumModel.setImage(image.getJSONObject(image.length() - 1).getString("link"));
+                        albumModel.setThumbnail(image.getJSONObject(0).getString("link"));
 //                        albumModel.setSongs();
 
 
@@ -126,6 +152,7 @@ public class HomepageActivity extends AppCompatActivity {
                         songModel.setUrl(song.getJSONObject(j).getString("url"));
                         JSONArray image = song.getJSONObject(j).getJSONArray("image");
                         songModel.setImage(image.getJSONObject(image.length()-1).getString("link"));
+                        songModel.setThumbnail(image.getJSONObject(0).getString("link"));
 
 
                         songs.add(songModel);
@@ -165,6 +192,7 @@ public class HomepageActivity extends AppCompatActivity {
         songModel.setImage(albumModel.getImage());
         songModel.setFeaturedArtists(albumModel.getFeaturedArtists());
         songModel.setDuration(albumModel.getPlayCount());
+        songModel.setThumbnail(albumModel.getThumbnail());
 
         return songModel;
     }
@@ -194,12 +222,31 @@ public class HomepageActivity extends AppCompatActivity {
     public void updateCurrentPlaying(SongModel songModel){
         TextView songName = findViewById(R.id.selectedMusic);
         TextView artistName = findViewById(R.id.selectedArtist);
-        ImageView songImage = findViewById(R.id.songImage);
+        ImageView songImage = findViewById(R.id.selectedImage);
         View parent = findViewById(R.id.bottomParent);
         parent.setVisibility(View.VISIBLE);
 
-        Glide.with(this).load(songModel.getImage()).into(songImage);
+        songName.setSelected(true);
+        artistName.setSelected(true);
+
+//        Glide.with(this).load(songModel.getImage()).into(songImage);
+//        RequestOptions requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL);
+        Glide.with(this).load(songModel.getImage())
+                .thumbnail(Glide.with(this).load(songModel.getThumbnail()))
+                .into(songImage);
         songName.setText(songModel.getName());
         artistName.setText(songModel.getFeaturedArtists());
+
+//        if (player!=null && player.isPlaying()){
+//            play.setVisibility(View.GONE);
+//            pause.setVisibility(View.VISIBLE);
+//        }
+//        if (player!=null && !player.isPlaying()){
+//            pause.setVisibility(View.GONE);
+//            play.setVisibility(View.VISIBLE);
+//        }
+
+        play.setVisibility(View.GONE);
+        pause.setVisibility(View.VISIBLE);
     }
 }

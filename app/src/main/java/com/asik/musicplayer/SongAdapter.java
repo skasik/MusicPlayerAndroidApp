@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,11 +78,18 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             songName.setText(songModel.getName());
             artistName.setText(songModel.getFeaturedArtists());
             duration.setText(songModel.getDuration());
-            Glide.with(homepageActivity).load(songModel.getImage()).into(songImage);
+            Glide.with(homepageActivity).load(songModel.getImage())
+                    .thumbnail(Glide.with(homepageActivity).load(songModel.getThumbnail()))
+                    .into(songImage);
+//            Glide.with(homepageActivity).load(songModel.getImage())
+//                    .into(songImage);
 
             playMusic.setOnClickListener(v -> {
                 if (songModel.getDownloadUrl().equals("")) fetchSongDownloadURL(songModel, position);
                 else startPlayingSong(songModel, position);
+
+                Log.d("debugTest", songModel.getThumbnail());
+
             });
         }
 
@@ -111,7 +119,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
 
         void fetchSongDownloadURL(SongModel song, int pos) {
-            String API_LINK = "https://saavn.me/songs?link=" + song.getUrl();
+            String API_LINK = "https://saavn.me/songs?id=" + song.getId();
             Toast.makeText(homepageActivity, "Loading song...", Toast.LENGTH_SHORT).show();
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API_LINK, new Response.Listener<JSONObject>() {
                 @Override
@@ -120,7 +128,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
                         JSONObject data = response.getJSONArray("data").getJSONObject(0);
                         JSONArray downloadUrls = data.getJSONArray("downloadUrl");
+                        JSONArray image = data.getJSONArray("image");
                         song.setDownloadUrl(downloadUrls.getJSONObject(downloadUrls.length()-1).getString("link"));
+                        song.setThumbnail(image.getJSONObject(0).getString("link"));
                         startPlayingSong(song, pos);
                     } catch (Exception e) {
                         e.printStackTrace();

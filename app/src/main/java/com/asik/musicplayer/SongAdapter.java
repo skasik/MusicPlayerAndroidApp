@@ -1,4 +1,6 @@
 package com.asik.musicplayer;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
@@ -68,6 +72,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
             playMusic.setOnClickListener(v -> {
                 homepageActivity.currentlyPlaying = musics;
+                homepageActivity.curPos = position;
                 if (songModel.getDownloadUrl().equals(""))
                     homepageActivity.fetchSongDownloadURL(songModel, position);
                 else {
@@ -76,6 +81,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
 
             });
+            checkIfPlaying(songModel);
+        }
+
+        void checkIfPlaying(SongModel songModel) {
+            if (homepageActivity.currentlyPlaying.size() > 0) {
+                SongModel current = homepageActivity.currentlyPlaying.get(homepageActivity.curPos);
+                if (current.getId().equals(songModel.getId()) && !current.getId().equals("")) {
+                    playMusic.setBackgroundColor(homepageActivity.getResources().getColor(R.color.play_bar));
+                } else playMusic.setBackgroundColor(homepageActivity.getResources().getColor(R.color.white));
+            }
+
+            new Handler().postDelayed(() -> {
+                checkIfPlaying(songModel);
+            }, 100);
         }
 
 

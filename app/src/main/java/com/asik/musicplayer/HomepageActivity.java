@@ -177,6 +177,7 @@ public class HomepageActivity extends AppCompatActivity {
                         playlistModel.setName(playlist.getJSONObject(i).getString("title"));
                         playlistModel.setSubtitle(playlist.getJSONObject(i).getString("subtitle"));
                         playlistModel.setUrl(playlist.getJSONObject(i).getString("url"));
+                        playlistModel.setSongCount(playlist.getJSONObject(i).getString("songCount"));
                         JSONArray images = playlist.getJSONObject(i).getJSONArray("image");
                         playlistModel.setImage(images.getJSONObject(images.length()-1).getString("link"));
 

@@ -61,11 +61,13 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         TextView followers;
 
         LinearLayout playlistClick;
+        TextView songCount;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.albumImage);
             name = itemView.findViewById(R.id.albumName);
             followers = itemView.findViewById(R.id.artistsName);
+            songCount = itemView.findViewById(R.id.songCount);
             playlistClick = itemView.findViewById(R.id.album);
 
         }
@@ -73,6 +75,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         public void setPlaylistData(PlaylistModel playlistModel, int position) {
             name.setText(playlistModel.getName());
             followers.setText(playlistModel.getSubtitle());
+            songCount.setVisibility(View.VISIBLE);
+
+            songCount.setText(playlistModel.getSongCount());
             Glide.with(homepageActivity).load(playlistModel.getImage()).into(image);
 
             playlistClick.setOnClickListener(v -> {
@@ -102,11 +107,12 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(playlist_API, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        SongModel oneSong = new SongModel();
+
 
                         try {
                             JSONArray songs = response.getJSONObject("data").getJSONArray("songs");
                             for (int i = 0;i<songs.length();i++){
+                                SongModel oneSong = new SongModel();
                                 oneSong.setName(songs.getJSONObject(i).getString("name"));
                                 oneSong.setId(songs.getJSONObject(i).getString("id"));
                                 oneSong.setDuration(songs.getJSONObject(i).getString("duration"));
@@ -143,10 +149,11 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                     }
                 });
 
-                dialog.show();
+
 
                 RequestQueue requestQueue = Volley.newRequestQueue(homepageActivity);
                 requestQueue.add(jsonObjectRequest);
+                dialog.show();
             });
 
         }

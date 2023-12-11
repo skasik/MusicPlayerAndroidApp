@@ -6,6 +6,16 @@ public class PlaylistModel {
     String subtitle;
     String image;
     String url;
+    String songCount;
+
+    public String getSongCount() {
+
+        return songCount;
+    }
+
+    public void setSongCount(String songCount) {
+        this.songCount = songCount+" Songs";
+    }
 
     public String getName() {
         return name;

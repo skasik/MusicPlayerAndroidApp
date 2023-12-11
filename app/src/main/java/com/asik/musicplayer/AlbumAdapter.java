@@ -104,6 +104,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                 TextView albname = dialog.findViewById(R.id.albumName);
                 albname.setSelected(true);
                 albname.setText(albumModel.getName());
+
+                ImageView im = dialog.findViewById(R.id.songImage);
+                Glide.with(homepageActivity).load(albumModel.getImage()).into(im);
                 String ALBUM_API = "https://saavn.me/albums?id="+albumModel.getId();
                 Log.d("debugTest", ALBUM_API);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(ALBUM_API, new Response.Listener<JSONObject>() {

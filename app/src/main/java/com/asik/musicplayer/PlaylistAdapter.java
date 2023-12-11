@@ -92,6 +92,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                 });
 
                 TextView playlistName = dialog.findViewById(R.id.albumName);
+                ImageView im = dialog.findViewById(R.id.songImage);
+                Glide.with(homepageActivity).load(playlistModel.getImage()).into(im);
                 playlistName.setText(playlistModel.getName());
                 playlistName.setSelected(true);
 

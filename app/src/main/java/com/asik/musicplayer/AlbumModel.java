@@ -1,5 +1,7 @@
 package com.asik.musicplayer;
 
+import android.text.Html;
+
 import java.util.ArrayList;
 
 public class AlbumModel {
@@ -56,7 +58,7 @@ public class AlbumModel {
         this.thumbnail = "";
     }
 
-    void addSong(SongModel song){
+    void addSong(SongModel song) {
         this.songs.add(song);
     }
 
@@ -73,7 +75,7 @@ public class AlbumModel {
     }
 
     public void setName(String name) {
-        this.name = name.replaceAll("&quot;", "\"");
+        this.name = Html.fromHtml(name).toString();
     }
 
     public int getSongCount() {
@@ -89,7 +91,7 @@ public class AlbumModel {
     }
 
     public void setFeaturedArtists(String featuredArtists) {
-        this.featuredArtists = featuredArtists;
+        this.featuredArtists = Html.fromHtml(featuredArtists).toString();
     }
 
     public String getUrl() {

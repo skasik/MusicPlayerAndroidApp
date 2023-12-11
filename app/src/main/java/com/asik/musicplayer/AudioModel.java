@@ -1,5 +1,7 @@
 package com.asik.musicplayer;
 
+import android.text.Html;
+
 public class AudioModel {
     String artistName;
     String audioName;
@@ -11,7 +13,7 @@ public class AudioModel {
     }
 
     public void setArtistName(String artistName) {
-        this.artistName = artistName;
+        this.artistName = Html.fromHtml(artistName).toString();
     }
 
     public String getAudioName(){
@@ -19,7 +21,7 @@ public class AudioModel {
     }
 
     public void setAudioName(String audioName) {
-        this.audioName = audioName;
+        this.audioName = Html.fromHtml(audioName).toString();
     }
 
     public String getAudioPath(){

@@ -1,5 +1,7 @@
 package com.asik.musicplayer;
 
+import android.text.Html;
+
 public class SongModel {
     String id;
     String name;
@@ -50,7 +52,7 @@ public class SongModel {
     }
 
     public void setName(String name) {
-        this.name = name.replaceAll("&quot;", "\"");
+        this.name = Html.fromHtml(name).toString();
     }
 
     public String getDuration() {
@@ -70,7 +72,7 @@ public class SongModel {
     }
 
     public void setFeaturedArtists(String featuredArtists) {
-        this.featuredArtists = featuredArtists;
+        this.featuredArtists = Html.fromHtml(featuredArtists).toString();
     }
 
     public boolean isHasLyrics() {

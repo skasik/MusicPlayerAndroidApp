@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -165,9 +166,13 @@ public class HomepageActivity extends AppCompatActivity {
 
                     RecyclerView songAD = findViewById(R.id.songsRV);
                     songAD.setAdapter(new SongAdapter(songs, HomepageActivity.this));
-                    songAD.setLayoutManager(new LinearLayoutManager(HomepageActivity.this, LinearLayoutManager.VERTICAL, false));
-                    songAD.setHasFixedSize(true);
+                    LinearLayoutManager llm = new LinearLayoutManager(HomepageActivity.this, LinearLayoutManager.VERTICAL, false);
+                    llm.setAutoMeasureEnabled(true);
+                    songAD.setLayoutManager(llm);
+//                    songAD.setHasFixedSize(true);
                     songAD.setNestedScrollingEnabled(false);
+
+//                    Log.d("debugTestLength", songs.size()+">>"+songs.get(songs.size()-1).getName());
 
 
                 } catch (Exception e) {
@@ -269,7 +274,6 @@ public class HomepageActivity extends AppCompatActivity {
                 if (player != null) player.seekTo(seekBar.getProgress());
             }
         });
-
 
 
 //        behavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottomsheet_height));

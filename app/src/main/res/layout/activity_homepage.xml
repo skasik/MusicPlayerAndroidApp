@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".HomepageActivity">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,6 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:overScrollMode="never"
+                android:nestedScrollingEnabled="false"
                 android:scrollbars="none" />
 
             <TextView
@@ -46,7 +47,6 @@
                 android:layout_marginTop="40dp"
                 android:fontFamily="@font/poppins_extrabold"
                 android:text="Albums"
-
                 android:textColor="@color/black"
                 android:textSize="30sp"
 
@@ -63,7 +63,7 @@
         </LinearLayout>
 
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
         android:id="@+id/bottomParent"

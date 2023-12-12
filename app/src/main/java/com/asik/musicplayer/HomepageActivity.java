@@ -1,15 +1,20 @@
 package com.asik.musicplayer;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -42,13 +47,36 @@ public class HomepageActivity extends AppCompatActivity {
     ImageView pause;
     SeekBar seekBar;
     Boolean isPlayerScreenShown = false;
+    ArrayList<LanguageModel> languageModels = new ArrayList<>();
+    private OnBackPressedDispatcher onBackPressedDispatcher;
 
+    private ArrayList<LanguageModel> selectedLanguages = new ArrayList<>();
+    String languageParam = "";
+    SharedPreferences sp;
+    SharedPreferences.Editor ed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
+        onBackPressedDispatcher = getOnBackPressedDispatcher();
+        onBackPressedDispatcher.addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                NestedScrollView nestedScrollView = findViewById(R.id.scrollbar);
+                if (nestedScrollView.canScrollVertically(-1)){
+                    nestedScrollView.smoothScrollTo(0,0);
+                }
+                else {
+                    finish();
+                }
+
+            }
+        });
+
+        sp = getSharedPreferences("music_prefs", MODE_PRIVATE);
+        ed = sp.edit();
 
         View playing = findViewById(R.id.playing);
         CardView playingImage = findViewById(R.id.card);
@@ -83,7 +111,6 @@ public class HomepageActivity extends AppCompatActivity {
 
         });
 
-        ArrayList<LanguageModel> languageModels = new ArrayList<>();
         languageModels.add(new LanguageModel("For You", "hindi,english,bengali", R.id.allSong));
         languageModels.add(new LanguageModel("Hindi", R.id.hindiSong));
         languageModels.add(new LanguageModel("Bengali", R.id.bengaliSong));
@@ -105,18 +132,65 @@ public class HomepageActivity extends AppCompatActivity {
         languageModels.forEach(languageModel -> {
             Button btn = findViewById(languageModel.getButtonId());
             btn.setOnClickListener(v -> {
-                loadHomePage(languageModel.getParameter());
-                languageModels.forEach(languageModel1 -> {
-                    Button btn2 = findViewById(languageModel1.getButtonId());
-                    btn2.setBackgroundColor(getResources().getColor(R.color.gray));
-                });
-                btn.setBackgroundColor(getResources().getColor(R.color.black));
+                if (languageModel.getButtonId() == R.id.allSong){
+                    languageModels.forEach(languageModel1 -> {
+                        Button btn2 = findViewById(languageModel1.getButtonId());
+                        btn2.setBackgroundColor(getResources().getColor(R.color.gray));
+                    });
+                    ((Button)findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.black));
+                    selectedLanguages = new ArrayList<>();
+                    loadHomePage(languageModel.getParameter());
+                    ed.putString("languages", "").commit();
+                }
+                else {
+                    ((Button)findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.gray));
+                    if (LanguageModel.isLanguagePresent(languageModel, selectedLanguages)){
+                        btn.setBackgroundColor(getResources().getColor(R.color.gray));
+                        selectedLanguages = LanguageModel.removeLanguage(languageModel, selectedLanguages);
+                    }
+                    else {
+                        btn.setBackgroundColor(getResources().getColor(R.color.black));
+                        selectedLanguages.add(languageModel);
+                    }
+
+                    languageParam = "";
+                    selectedLanguages.forEach(languageModel1 -> {
+                        if (!languageParam.equals("")) languageParam += ",";
+                        languageParam += languageModel1.getParameter();
+                    });
+                    Log.d("debugTest", languageParam);
+                    loadHomePage(languageParam);
+                    ed.putString("languages", languageParam).commit();
+                }
+
+//                loadHomePage(languageModel.getParameter());
+//                languageModels.forEach(languageModel1 -> {
+//                    Button btn2 = findViewById(languageModel1.getButtonId());
+//                    btn2.setBackgroundColor(getResources().getColor(R.color.gray));
+//                });
+//                btn.setBackgroundColor(getResources().getColor(R.color.black));
             });
             btn.setTextColor(getResources().getColor(R.color.white));
 
         });
 
-        ((Button)findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.black));
+
+        languageParam = sp.getString("languages", "");
+        if (languageParam.equals("")){
+            ((Button)findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.black));
+            loadHomePage(languageModels.get(0).getParameter());
+        }
+        else {
+            selectedLanguages = new ArrayList<>();
+            ((Button)findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.gray));
+            languageModels.forEach(languageModel -> {
+                if (languageParam.contains(languageModel.getParameter())){
+                    selectedLanguages.add(languageModel);
+                    ((Button)findViewById(languageModel.getButtonId())).setBackgroundColor(getResources().getColor(R.color.black));
+                }
+            });
+            loadHomePage(languageParam);
+        }
 
 
 //        ((Button)findViewById(R.id.allSong)).setOnClickListener(v -> {
@@ -124,7 +198,7 @@ public class HomepageActivity extends AppCompatActivity {
 //        });
 
 
-        loadHomePage("hindi,english,bengali");
+//        loadHomePage("hindi,english,bengali");
 //        loadHomePage("hindi");
     }
 

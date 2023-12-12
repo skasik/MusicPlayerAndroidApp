@@ -1,5 +1,7 @@
 package com.asik.musicplayer;
 
+import java.util.ArrayList;
+
 public class LanguageModel {
     String languageName;
     String parameter;
@@ -38,5 +40,22 @@ public class LanguageModel {
 
     public void setButtonId(int buttonId) {
         this.buttonId = buttonId;
+    }
+
+    public static Boolean isLanguagePresent(LanguageModel languageModel, ArrayList<LanguageModel> languages){
+        for (int i=0; i<languages.size(); ++i){
+            if (languages.get(i).getParameter().equals(languageModel.getParameter())) return true;
+        }
+
+        return false;
+    }
+    public static ArrayList<LanguageModel> removeLanguage(LanguageModel languageModel, ArrayList<LanguageModel> languages){
+        ArrayList<LanguageModel> allLanguages = new ArrayList<>();
+        for (int i=0; i<languages.size(); ++i){
+            if (!languages.get(i).getParameter().equals(languageModel.getParameter())) {
+                allLanguages.add(languages.get(i));
+            }
+        }
+        return allLanguages;
     }
 }

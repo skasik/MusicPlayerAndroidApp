@@ -1,19 +1,42 @@
 package com.asik.musicplayer;
 
+import static com.asik.musicplayer.MusicApplication.ACTION_NEXT;
+import static com.asik.musicplayer.MusicApplication.ACTION_PLAY;
+import static com.asik.musicplayer.MusicApplication.ACTION_PREV;
+import static com.asik.musicplayer.MusicApplication.CHANNEL2_ID;
+
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.session.MediaSession;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +61,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class HomepageActivity extends AppCompatActivity {
+public class HomepageActivity extends AppCompatActivity implements ActionPlaying, ServiceConnection {
 
     MediaPlayer player;
     ArrayList<SongModel> currentlyPlaying = new ArrayList<>();
@@ -75,6 +98,16 @@ public class HomepageActivity extends AppCompatActivity {
             }
         });
 
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, this, BIND_AUTO_CREATE);
+        mediaSessionCompat = new MediaSessionCompat(this, "My Music");
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 11);
+            }
+        }
+
         sp = getSharedPreferences("music_prefs", MODE_PRIVATE);
         ed = sp.edit();
 
@@ -97,6 +130,7 @@ public class HomepageActivity extends AppCompatActivity {
                 player.start();
                 play.setVisibility(View.GONE);
                 pause.setVisibility(View.VISIBLE);
+                showNotification(R.drawable.pause);
             }
 
 
@@ -106,6 +140,7 @@ public class HomepageActivity extends AppCompatActivity {
                 player.pause();
                 pause.setVisibility(View.GONE);
                 play.setVisibility(View.VISIBLE);
+                showNotification(R.drawable.play);
             }
 
 
@@ -128,27 +163,24 @@ public class HomepageActivity extends AppCompatActivity {
         languageModels.add(new LanguageModel("Telugu", R.id.teleguSong));
 
 
-
         languageModels.forEach(languageModel -> {
             Button btn = findViewById(languageModel.getButtonId());
             btn.setOnClickListener(v -> {
-                if (languageModel.getButtonId() == R.id.allSong){
+                if (languageModel.getButtonId() == R.id.allSong) {
                     languageModels.forEach(languageModel1 -> {
                         Button btn2 = findViewById(languageModel1.getButtonId());
                         btn2.setBackgroundColor(getResources().getColor(R.color.gray));
                     });
-                    ((Button)findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.black));
+                    ((Button) findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.black));
                     selectedLanguages = new ArrayList<>();
                     loadHomePage(languageModel.getParameter());
                     ed.putString("languages", "").commit();
-                }
-                else {
-                    ((Button)findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.gray));
-                    if (LanguageModel.isLanguagePresent(languageModel, selectedLanguages)){
+                } else {
+                    ((Button) findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.gray));
+                    if (LanguageModel.isLanguagePresent(languageModel, selectedLanguages)) {
                         btn.setBackgroundColor(getResources().getColor(R.color.gray));
                         selectedLanguages = LanguageModel.removeLanguage(languageModel, selectedLanguages);
-                    }
-                    else {
+                    } else {
                         btn.setBackgroundColor(getResources().getColor(R.color.black));
                         selectedLanguages.add(languageModel);
                     }
@@ -176,17 +208,16 @@ public class HomepageActivity extends AppCompatActivity {
 
 
         languageParam = sp.getString("languages", "");
-        if (languageParam.equals("")){
-            ((Button)findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.black));
+        if (languageParam.equals("")) {
+            ((Button) findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.black));
             loadHomePage(languageModels.get(0).getParameter());
-        }
-        else {
+        } else {
             selectedLanguages = new ArrayList<>();
-            ((Button)findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.gray));
+            ((Button) findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.gray));
             languageModels.forEach(languageModel -> {
-                if (languageParam.contains(languageModel.getParameter())){
+                if (languageParam.contains(languageModel.getParameter())) {
                     selectedLanguages.add(languageModel);
-                    ((Button)findViewById(languageModel.getButtonId())).setBackgroundColor(getResources().getColor(R.color.black));
+                    ((Button) findViewById(languageModel.getButtonId())).setBackgroundColor(getResources().getColor(R.color.black));
                 }
             });
             loadHomePage(languageParam);
@@ -200,6 +231,20 @@ public class HomepageActivity extends AppCompatActivity {
 
 //        loadHomePage("hindi,english,bengali");
 //        loadHomePage("hindi");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unbindService(this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, this, BIND_AUTO_CREATE);
     }
 
     private void loadHomePage(String language) {
@@ -245,7 +290,7 @@ public class HomepageActivity extends AppCompatActivity {
                     }
 
                     JSONArray playlist = albumData.getJSONArray("playlists");
-                    for (int i = 0;i<playlist.length();i++){
+                    for (int i = 0; i < playlist.length(); i++) {
                         PlaylistModel playlistModel = new PlaylistModel();
                         playlistModel.setId(playlist.getJSONObject(i).getString("id"));
                         playlistModel.setName(playlist.getJSONObject(i).getString("title"));
@@ -253,16 +298,15 @@ public class HomepageActivity extends AppCompatActivity {
                         playlistModel.setUrl(playlist.getJSONObject(i).getString("url"));
                         playlistModel.setSongCount(playlist.getJSONObject(i).getString("songCount"));
                         JSONArray images = playlist.getJSONObject(i).getJSONArray("image");
-                        playlistModel.setImage(images.getJSONObject(images.length()-1).getString("link"));
+                        playlistModel.setImage(images.getJSONObject(images.length() - 1).getString("link"));
 
                         playlists.add(playlistModel);
 
                     }
                     RecyclerView playlistAD = findViewById(R.id.playlistRV);
-                    playlistAD.setAdapter(new PlaylistAdapter(playlists,HomepageActivity.this));
-                    playlistAD.setLayoutManager(new LinearLayoutManager(HomepageActivity.this,RecyclerView.HORIZONTAL,false));
+                    playlistAD.setAdapter(new PlaylistAdapter(playlists, HomepageActivity.this));
+                    playlistAD.setLayoutManager(new LinearLayoutManager(HomepageActivity.this, RecyclerView.HORIZONTAL, false));
                     playlistAD.setHasFixedSize(true);
-
 
 
                     album = albumData.getJSONObject("trending").getJSONArray("albums");
@@ -441,13 +485,7 @@ public class HomepageActivity extends AppCompatActivity {
         previousPlaying.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                curPos -= 1;
-                if (curPos <= 0) curPos = 0;
-                SongModel songModel = currentlyPlaying.get(curPos);
-                if (songModel.getDownloadUrl().equals("")) fetchSongDownloadURL(songModel, curPos);
-                else {
-                    startPlayingSong(songModel, curPos);
-                }
+                playPrevSong();
             }
         });
         seekbarPlaying.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -516,6 +554,16 @@ public class HomepageActivity extends AppCompatActivity {
         }
     }
 
+    public void playPrevSong() {
+        curPos -= 1;
+        if (curPos <= 0) curPos = 0;
+        SongModel songModel = currentlyPlaying.get(curPos);
+        if (songModel.getDownloadUrl().equals("")) fetchSongDownloadURL(songModel, curPos);
+        else {
+            startPlayingSong(songModel, curPos);
+        }
+    }
+
     public void updateCurrentPlaying(SongModel songModel) {
         TextView songName = findViewById(R.id.selectedMusic);
         TextView artistName = findViewById(R.id.selectedArtist);
@@ -536,6 +584,7 @@ public class HomepageActivity extends AppCompatActivity {
 
         play.setVisibility(View.GONE);
         pause.setVisibility(View.VISIBLE);
+        showNotification(R.drawable.pause);
         updateSeekbar();
         seekBar.setMax(player.getDuration());
     }
@@ -551,10 +600,12 @@ public class HomepageActivity extends AppCompatActivity {
             if (player != null && player.isPlaying()) {
                 play.setVisibility(View.GONE);
                 pause.setVisibility(View.VISIBLE);
+                showNotification(R.drawable.pause);
             }
             if (player != null && !player.isPlaying()) {
                 pause.setVisibility(View.GONE);
                 play.setVisibility(View.VISIBLE);
+                showNotification(R.drawable.play);
             }
 
             updateSeekbar();
@@ -593,8 +644,6 @@ public class HomepageActivity extends AppCompatActivity {
                 playPauseBtn.playAnimation();
             }
         }
-
-
 
         new Handler().postDelayed(() -> {
 
@@ -702,5 +751,91 @@ public class HomepageActivity extends AppCompatActivity {
     void playAll(SongModel song,int pos){
 
 
+    }
+
+    MusicService musicService;
+    MediaSessionCompat mediaSessionCompat;
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        MusicService.MyBinder myBinder = (MusicService.MyBinder) iBinder;
+        musicService = myBinder.getService();
+        musicService.setCallBack(HomepageActivity.this);
+//        isBound = true;
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+//        isBound = false;
+        musicService = null;
+    }
+
+    void showNotification(int playPauseBtn) {
+        Intent intent = new Intent(this, HomepageActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        Intent prevIntent = new Intent(this, NotificationReceiver.class).setAction(ACTION_PREV);
+        PendingIntent prevPendingIntent = PendingIntent.getBroadcast(this, 0, prevIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent pauseIntent = new Intent(this, NotificationReceiver.class).setAction(ACTION_PLAY);
+        PendingIntent pausePendingIntent = PendingIntent.getBroadcast(this, 0, pauseIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent nextIntent = new Intent(this, NotificationReceiver.class).setAction(ACTION_NEXT);
+        PendingIntent nextPendingIntent = PendingIntent.getBroadcast(this, 0, nextIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background);
+        try {
+            if (player!=null && currentlyPlaying.size()>0){
+                largeIcon = Glide.with(this).asBitmap().load(currentlyPlaying.get(curPos).getImage()).submit().get();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL2_ID)
+                .setSmallIcon(playPauseBtn)
+                .setLargeIcon(largeIcon)
+                .setContentTitle(currentlyPlaying.get(curPos).getName())
+                .setContentText(currentlyPlaying.get(curPos).getFeaturedArtists())
+                .addAction(R.drawable.previous_button, "Previous", prevPendingIntent)
+                .addAction(playPauseBtn, "Pause", pausePendingIntent)
+                .addAction(R.drawable.next, "Next", nextPendingIntent)
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(0, 1, 2)
+                        .setMediaSession(mediaSessionCompat.getSessionToken()))
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+//                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true)
+                .build();
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= 33) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 11);
+            }
+            return;
+        }
+        notificationManagerCompat.notify(2, notification);
+    }
+
+    @Override
+    public void nextClicked() {
+        playNextSong();
+    }
+
+    @Override
+    public void prevClicked() {
+        playPrevSong();
+    }
+
+    @Override
+    public void playClicked() {
+        if (player!=null && play!=null && pause!=null){
+            if (player.isPlaying()){
+                pause.callOnClick();
+            }else {
+                play.callOnClick();
+            }
+        }
     }
 }

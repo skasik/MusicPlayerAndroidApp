@@ -443,13 +443,25 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         upcomingSong.setOnClickListener(v -> {
             showUpcomingSongs(dialog);
         });
+        LottieAnimationView playPauseBtn = dialog.findViewById(R.id.playPauseBtn);
         if (openUpcomingSongsList) {
             new Handler().postDelayed(() -> {
                 showUpcomingSongs(dialog);
+                if (player != null) {
+                    if (!player.isPlaying()) {
+                        playPauseBtn.setMinFrame(66);
+                        playPauseBtn.setMaxFrame(67);
+                        playPauseBtn.playAnimation();
+                    } else {
+                        playPauseBtn.setMinFrame(29);
+                        playPauseBtn.setMaxFrame(30);
+                        playPauseBtn.playAnimation();
+                    }
+                }
             }, 300);
         }
 
-        LottieAnimationView playPauseBtn = dialog.findViewById(R.id.playPauseBtn);
+
         playPauseBtn.setOnClickListener(v -> {
             handlePlayPauseBtnAnim(playPauseBtn);
         });

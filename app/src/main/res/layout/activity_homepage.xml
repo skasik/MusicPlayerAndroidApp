@@ -38,7 +38,7 @@
                         android:id="@+id/allSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="For you" />
@@ -47,7 +47,7 @@
                         android:id="@+id/hindiSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Hindi" />
@@ -56,7 +56,7 @@
                         android:id="@+id/englishSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="English" />
@@ -74,7 +74,7 @@
                         android:id="@+id/punjabiSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Punjabi" />
@@ -83,7 +83,7 @@
                         android:id="@+id/bhojpuriSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Bhojpuri" />
@@ -92,7 +92,7 @@
                         android:id="@+id/urduSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Urdu" />
@@ -101,7 +101,7 @@
                         android:id="@+id/gujratiSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Gujarati" />
@@ -110,7 +110,7 @@
                         android:id="@+id/odiaSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Odia" />
@@ -119,7 +119,7 @@
                         android:id="@+id/rajasthaniSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Rajasthani" />
@@ -128,7 +128,7 @@
                         android:id="@+id/haryanviSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Haryanvi" />
@@ -137,7 +137,7 @@
                         android:id="@+id/malayalamSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Malayalam" />
@@ -146,7 +146,7 @@
                         android:id="@+id/marathiSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Marathi" />
@@ -155,7 +155,7 @@
                         android:id="@+id/tamilSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Tamil" />
@@ -164,7 +164,7 @@
                         android:id="@+id/teleguSong"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="10dp"
                         android:backgroundTint="@color/gray"
                         android:fontFamily="@font/poppins"
                         android:text="Telugu" />

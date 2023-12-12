@@ -389,6 +389,11 @@ public class HomepageActivity extends AppCompatActivity {
             isPlayerScreenShown = false;
         });
 
+        ImageView upcomingSong = dialog.findViewById(R.id.upcomingSong);
+        upcomingSong.setOnClickListener(v -> {
+            showUpcomingSongs();
+        });
+
         LottieAnimationView playPauseBtn = dialog.findViewById(R.id.playPauseBtn);
         playPauseBtn.setOnClickListener(v -> {
             handlePlayPauseBtnAnim(playPauseBtn);
@@ -476,6 +481,31 @@ public class HomepageActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public void showUpcomingSongs() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View songs = LayoutInflater.from(this).inflate(R.layout.songlis_bottomsheet,null);
+        dialog.setContentView(songs);
+
+
+        TextView name=dialog.findViewById(R.id.albumName);
+        name.setText("Currently Playing");
+
+        ((ImageView)dialog.findViewById(R.id.dismiss)).setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        ((ImageView)dialog.findViewById(R.id.songImage)).setVisibility(View.GONE);
+        ((ImageView)dialog.findViewById(R.id.playAll)).setVisibility(View.GONE);
+        ((ImageView)dialog.findViewById(R.id.shuffle)).setVisibility(View.GONE);
+        RecyclerView songRV = dialog.findViewById(R.id.songsRV);
+        songRV.setAdapter(new SongAdapter(currentlyPlaying,HomepageActivity.this));
+        songRV.setHasFixedSize(true);
+        songRV.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        dialog.show();
+
+
+    }
+
     public void playNextSong() {
         curPos += 1;
         if (curPos >= currentlyPlaying.size()) curPos = 0;
@@ -542,15 +572,27 @@ public class HomepageActivity extends AppCompatActivity {
         TextView currentTime = dialog.findViewById(R.id.currentTime);
         SeekBar seekPlaying = dialog.findViewById(R.id.seekPlaying);
 
-        if (currentlyPlaying.subList(curPos + 1, currentlyPlaying.size()).size() != upcomingSongsList.size()){
-            RecyclerView upcomingSongs = dialog.findViewById(R.id.upcomingRV);
-            upcomingSongsList = new ArrayList<>();
-            upcomingSongsList.addAll(currentlyPlaying.subList(curPos+1,currentlyPlaying.size()));
-            upcomingSongs.setAdapter(new SongAdapter(upcomingSongsList, this));
-            upcomingSongs.setHasFixedSize(true);
-            upcomingSongs.setLayoutManager(new LinearLayoutManager(HomepageActivity.this,LinearLayoutManager.VERTICAL,false));
-        }
+//        if (currentlyPlaying.subList(curPos + 1, currentlyPlaying.size()).size() != upcomingSongsList.size()){
+//            RecyclerView upcomingSongs = dialog.findViewById(R.id.upcomingRV);
+//            upcomingSongsList = new ArrayList<>();
+//            upcomingSongsList.addAll(currentlyPlaying.subList(curPos+1,currentlyPlaying.size()));
+//            upcomingSongs.setAdapter(new SongAdapter(upcomingSongsList, this));
+//            upcomingSongs.setHasFixedSize(true);
+//            upcomingSongs.setLayoutManager(new LinearLayoutManager(HomepageActivity.this,LinearLayoutManager.VERTICAL,false));
+//        }
+        LottieAnimationView playPauseBtn = dialog.findViewById(R.id.playPauseBtn);
 
+        if (player != null && !playPauseBtn.isAnimating()) {
+            if (!player.isPlaying()) {
+                playPauseBtn.setMinFrame(66);
+                playPauseBtn.setMaxFrame(67);
+                playPauseBtn.playAnimation();
+            } else {
+                playPauseBtn.setMinFrame(29);
+                playPauseBtn.setMaxFrame(30);
+                playPauseBtn.playAnimation();
+            }
+        }
 
 
 

@@ -8,17 +8,35 @@
     android:minHeight="900dp"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/dismiss"
-        android:layout_gravity="start"
-        app:tint="#C3C3C3"
-        android:id="@+id/dismiss"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/dismiss"
+            android:layout_gravity="start"
+            app:tint="#C3C3C3"
+            android:id="@+id/dismiss"
 
-        />
+            />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/upcomingSong"
+            android:layout_marginTop="10dp"
+            android:tint="#C3C3C3"
+            android:src="@drawable/currently_playing"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:text="Upcoming Songs" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/songName"
@@ -115,7 +133,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            >
 
             <ImageView
                 android:id="@+id/previousBTN"
@@ -171,24 +191,26 @@
         </LinearLayout>
 
     </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_extrabold"
-        android:text="Upcomig Songs"
-        android:layout_gravity="start"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:paddingStart="10dp"
-        />
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/upcomingRV"
-        android:paddingHorizontal="20dp"
-        >
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:fontFamily="@font/poppins_extrabold"-->
+<!--        android:text="Upcomig Songs"-->
+<!--        android:layout_gravity="start"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="20sp"-->
+<!--        android:paddingStart="10dp"-->
+<!--        android:visibility="gone"-->
+<!--        />-->
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/upcomingRV"-->
+<!--        android:paddingHorizontal="20dp"-->
+<!--        android:visibility="gone"-->
+<!--        >-->
         
-    </androidx.recyclerview.widget.RecyclerView>
+<!--    </androidx.recyclerview.widget.RecyclerView>-->
 
 
 </LinearLayout>

@@ -14,16 +14,33 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+
+import kotlin.Unit;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     ArrayList<SongModel> musics;
     HomepageActivity homepageActivity;
 
+    Callable<Void> onClick;
+
 
     SongAdapter(ArrayList<SongModel> musics, HomepageActivity homepageActivity) {
         this.musics = musics;
         this.homepageActivity = homepageActivity;
+        this.onClick = new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                return null;
+            }
+        };
 
+    }
+
+    SongAdapter(ArrayList<SongModel> musics, HomepageActivity homepageActivity, Callable<Void> onClick) {
+        this.musics = musics;
+        this.homepageActivity = homepageActivity;
+        this.onClick = onClick;
     }
 
     @NonNull
@@ -79,6 +96,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                     homepageActivity.startPlayingSong(songModel, position);
                 }
 
+                try {
+                    onClick.call();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             });
             checkIfPlaying(songModel);

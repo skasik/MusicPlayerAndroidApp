@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".HomepageActivity"
-    >
+    tools:context=".HomepageActivity">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollbar"
@@ -18,236 +17,278 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
-            <HorizontalScrollView
+            <LinearLayout
+                android:id="@+id/homeScreen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:overScrollMode="never"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/allSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="For you" />
+
+                        <Button
+                            android:id="@+id/hindiSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Hindi" />
+
+                        <Button
+                            android:id="@+id/englishSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="English" />
+
+                        <Button
+                            android:id="@+id/bengaliSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="20dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Bengali" />
+
+                        <Button
+                            android:id="@+id/punjabiSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Punjabi" />
+
+                        <Button
+                            android:id="@+id/bhojpuriSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Bhojpuri" />
+
+                        <Button
+                            android:id="@+id/urduSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Urdu" />
+
+                        <Button
+                            android:id="@+id/gujratiSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Gujarati" />
+
+                        <Button
+                            android:id="@+id/odiaSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Odia" />
+
+                        <Button
+                            android:id="@+id/rajasthaniSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Rajasthani" />
+
+                        <Button
+                            android:id="@+id/haryanviSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Haryanvi" />
+
+                        <Button
+                            android:id="@+id/malayalamSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Malayalam" />
+
+                        <Button
+                            android:id="@+id/marathiSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Marathi" />
+
+                        <Button
+                            android:id="@+id/tamilSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Tamil" />
+
+                        <Button
+                            android:id="@+id/teleguSong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:backgroundTint="@color/gray"
+                            android:fontFamily="@font/poppins"
+                            android:text="Telugu" />
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_extrabold"
+                    android:text="Songs"
+
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/songsRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    android:scrollbars="none" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:fontFamily="@font/poppins_extrabold"
+                    android:text="Albums"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/albumRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never"
+                    android:scrollbars="none" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:fontFamily="@font/poppins_extrabold"
+                    android:text="Trending Now"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/trendingAlbumRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never"
+                    android:scrollbars="none" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:fontFamily="@font/poppins_extrabold"
+                    android:text="Playlists"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/playlistRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never"
+                    android:scrollbars="none" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/searchLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                android:overScrollMode="never"
-                android:scrollbars="none">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:background="@color/play_bar"
+                    android:gravity="center_vertical"
+                    android:minHeight="60dp">
 
-                    <Button
-                        android:id="@+id/allSong"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/searchElementID"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="For you" />
-
-                    <Button
-                        android:id="@+id/hindiSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Hindi" />
-
-                    <Button
-                        android:id="@+id/englishSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="English" />
-
-                    <Button
-                        android:id="@+id/bengaliSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Bengali" />
-
-                    <Button
-                        android:id="@+id/punjabiSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Punjabi" />
-
-                    <Button
-                        android:id="@+id/bhojpuriSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Bhojpuri" />
-
-                    <Button
-                        android:id="@+id/urduSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Urdu" />
-
-                    <Button
-                        android:id="@+id/gujratiSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Gujarati" />
-
-                    <Button
-                        android:id="@+id/odiaSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Odia" />
-
-                    <Button
-                        android:id="@+id/rajasthaniSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Rajasthani" />
-
-                    <Button
-                        android:id="@+id/haryanviSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Haryanvi" />
-
-                    <Button
-                        android:id="@+id/malayalamSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Malayalam" />
-
-                    <Button
-                        android:id="@+id/marathiSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Marathi" />
-
-                    <Button
-                        android:id="@+id/tamilSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Tamil" />
-
-                    <Button
-                        android:id="@+id/teleguSong"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:backgroundTint="@color/gray"
-                        android:fontFamily="@font/poppins"
-                        android:text="Telugu" />
+                        android:background="@color/transparent"
+                        android:hint="Search for a song"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:maxLines="1" />
 
                 </LinearLayout>
 
-            </HorizontalScrollView>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_extrabold"
-                android:text="Songs"
-
-                android:textColor="@color/black"
-                android:textSize="30sp"
-
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/songsRV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:overScrollMode="never"
-                android:scrollbars="none" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:fontFamily="@font/poppins_extrabold"
-                android:text="Albums"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/albumRV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:overScrollMode="never"
-                android:scrollbars="none" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:fontFamily="@font/poppins_extrabold"
-                android:text="Trending Now"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/trendingAlbumRV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:overScrollMode="never"
-                android:scrollbars="none" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/searchItemRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:fontFamily="@font/poppins_extrabold"
-                android:text="Playlists"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/playlistRV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:overScrollMode="never"
-                android:scrollbars="none" />
-
-
+            </LinearLayout>
         </LinearLayout>
 
 
@@ -373,9 +414,53 @@
         android:id="@+id/seekbar"
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@id/bottomBar"
         android:progressDrawable="@drawable/seekbar_main_drawable"
         android:splitTrack="false"
         android:thumb="@drawable/seekbar_thumb" />
+
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginHorizontal="20dp"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <ImageView
+            android:id="@+id/homeButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/bottom_bar_icon_size"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:src="@drawable/home_button" />
+
+        <ImageView
+            android:id="@+id/searchButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/bottom_bar_icon_size"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:src="@drawable/search_button" />
+
+        <ImageView
+            android:id="@+id/favButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/bottom_bar_icon_size"
+            android:layout_weight="1"
+
+            android:padding="10dp"
+            android:src="@drawable/fav_button" />
+
+        <ImageView
+            android:id="@+id/profileButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/bottom_bar_icon_size"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:src="@drawable/profile_button" />
+
+    </LinearLayout>
 
 </RelativeLayout>

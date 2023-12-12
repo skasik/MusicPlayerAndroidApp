@@ -38,10 +38,13 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -101,6 +104,30 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
             }
         });
+        ImageView search = findViewById(R.id.searchButton);
+        search.setOnClickListener(v -> {
+            ((LinearLayout)findViewById(R.id.searchLayout)).setVisibility(View.VISIBLE);
+            ((LinearLayout)findViewById(R.id.homeScreen)).setVisibility(View.GONE);
+        });
+        ImageView homeButton = findViewById(R.id.homeButton);
+        homeButton.setOnClickListener(v -> {
+
+            ((LinearLayout)findViewById(R.id.searchLayout)).setVisibility(View.GONE);
+            ((LinearLayout)findViewById(R.id.homeScreen)).setVisibility(View.VISIBLE);
+        });
+
+        EditText searched = findViewById(R.id.searchElementID);
+        String searchAPI = "https://saavn.me/search/songs?limit=100&query=";
+        searched.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                String searchQuery = searched.getText().toString().trim().toLowerCase();
+                searchSongs(searchAPI+Uri.encode(searchQuery));
+
+                return true;
+            }
+        });
+
 
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, this, BIND_AUTO_CREATE);
@@ -235,6 +262,50 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
 //        loadHomePage("hindi,english,bengali");
 //        loadHomePage("hindi");
+    }
+
+    private void searchSongs(String s) {
+        ArrayList<SongModel> searchedSongs = new ArrayList<>();
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(s, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+
+                    JSONArray results =response.getJSONObject("data").getJSONArray("results");
+                    for (int i =0;i<results.length();i++){
+                        SongModel songModel = new SongModel();
+                        songModel.setName( results.getJSONObject(i).getString("name"));
+                        songModel.setId(results.getJSONObject(i).getString("id"));
+                        songModel.setDuration(results.getJSONObject(i).getString("duration"));
+                        songModel.setLanguage(results.getJSONObject(i).getString("language"));
+                        songModel.setUrl(results.getJSONObject(i).getString("url"));
+                        songModel.setFeaturedArtists(results.getJSONObject(i).getString("primaryArtists"));
+                        JSONArray image = results.getJSONObject(i).getJSONArray("image");
+                        songModel.setImage(image.getJSONObject(image.length() - 1).getString("link"));
+
+
+                        searchedSongs.add(songModel);
+
+                    }
+
+                    RecyclerView searchedRV = findViewById(R.id.searchItemRV);
+                    searchedRV.setAdapter(new SongAdapter(searchedSongs,HomepageActivity.this));
+                    searchedRV.setHasFixedSize(true);
+                    searchedRV.setLayoutManager(new LinearLayoutManager(HomepageActivity.this,LinearLayoutManager.VERTICAL,false));
+
+                }catch (Exception e){
+                    Toast.makeText(HomepageActivity.this,"Not Found",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(HomepageActivity.this,"Not Found",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(HomepageActivity.this);
+        requestQueue.add(jsonObjectRequest);
     }
 
     @Override

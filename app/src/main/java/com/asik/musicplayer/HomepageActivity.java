@@ -93,7 +93,10 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                     nestedScrollView.smoothScrollTo(0,0);
                 }
                 else {
-                    finish();
+//                    finish();
+                    //move activity to back
+                    moveTaskToBack(true);
+
                 }
 
             }
@@ -540,17 +543,19 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         songRV.setAdapter(new SongAdapter(currentlyPlaying, HomepageActivity.this, new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                LottieAnimationView playPauseBtn = parentDialog.findViewById(R.id.playPauseBtn);
+                if (parentDialog != null){
+                    LottieAnimationView playPauseBtn = parentDialog.findViewById(R.id.playPauseBtn);
 
-                if (player != null) {
-                    if (player.isPlaying()) {
-                        playPauseBtn.setMinFrame(66);
-                        playPauseBtn.setMaxFrame(67);
-                        playPauseBtn.playAnimation();
-                    } else {
-                        playPauseBtn.setMinFrame(29);
-                        playPauseBtn.setMaxFrame(30);
-                        playPauseBtn.playAnimation();
+                    if (player != null) {
+                        if (player.isPlaying()) {
+                            playPauseBtn.setMinFrame(66);
+                            playPauseBtn.setMaxFrame(67);
+                            playPauseBtn.playAnimation();
+                        } else {
+                            playPauseBtn.setMinFrame(29);
+                            playPauseBtn.setMaxFrame(30);
+                            playPauseBtn.playAnimation();
+                        }
                     }
                 }
                 return null;

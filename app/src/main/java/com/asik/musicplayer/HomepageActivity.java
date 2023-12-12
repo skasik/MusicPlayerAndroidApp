@@ -255,13 +255,6 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         }
 
 
-//        ((Button)findViewById(R.id.allSong)).setOnClickListener(v -> {
-//            loadHomePage("hindi,english,bengali");
-//        });
-
-
-//        loadHomePage("hindi,english,bengali");
-//        loadHomePage("hindi");
     }
 
     private void searchSongs(String s) {
@@ -280,6 +273,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                         songModel.setLanguage(results.getJSONObject(i).getString("language"));
                         songModel.setUrl(results.getJSONObject(i).getString("url"));
                         songModel.setFeaturedArtists(results.getJSONObject(i).getString("primaryArtists"));
+                        songModel.setArtistId(results.getJSONObject(i).getString("primaryArtistsId"));
                         JSONArray image = results.getJSONObject(i).getJSONArray("image");
                         songModel.setImage(image.getJSONObject(image.length() - 1).getString("link"));
 
@@ -289,7 +283,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                     }
 
                     RecyclerView searchedRV = findViewById(R.id.searchItemRV);
-                    searchedRV.setAdapter(new SongAdapter(searchedSongs,HomepageActivity.this));
+                    searchedRV.setAdapter(new SongAdapter(searchedSongs,HomepageActivity.this,true));
                     searchedRV.setHasFixedSize(true);
                     searchedRV.setLayoutManager(new LinearLayoutManager(HomepageActivity.this,LinearLayoutManager.VERTICAL,false));
 
@@ -450,7 +444,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                     }
 
                     RecyclerView songAD = findViewById(R.id.songsRV);
-                    songAD.setAdapter(new SongAdapter(songs, HomepageActivity.this));
+                    songAD.setAdapter(new SongAdapter(songs, HomepageActivity.this,false));
                     LinearLayoutManager llm = new LinearLayoutManager(HomepageActivity.this, LinearLayoutManager.VERTICAL, false);
                     llm.setAutoMeasureEnabled(true);
                     songAD.setLayoutManager(llm);

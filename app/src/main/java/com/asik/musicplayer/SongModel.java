@@ -2,6 +2,10 @@ package com.asik.musicplayer;
 
 import android.text.Html;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class SongModel {
     String id;
     String name;
@@ -13,6 +17,19 @@ public class SongModel {
     String downloadUrl;
     String language;
     String thumbnail;
+    ArrayList<String> artistId;
+
+    public ArrayList<String> getArtistId() {
+
+        return artistId;
+    }
+
+    public void setArtistId(String artistId) {
+        String[] ar=artistId.split(",");
+         List<String> list = Arrays.asList(ar);
+        ArrayList<String> ar2 = new ArrayList<>(list);
+        this.artistId = ar2;
+    }
 
     public void setHasLyrics(boolean hasLyrics) {
         this.hasLyrics = hasLyrics;

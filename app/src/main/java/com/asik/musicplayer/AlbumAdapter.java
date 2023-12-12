@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.Callable;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> {
     ArrayList<AlbumModel> albums;
@@ -140,7 +141,14 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                             }
 
                             RecyclerView objetSongs = dialog.findViewById(R.id.songsRV);
-                            objetSongs.setAdapter(new SongAdapter(songsOfThisAlbum, homepageActivity));
+                            objetSongs.setAdapter(new SongAdapter(songsOfThisAlbum, homepageActivity, new Callable<Void>() {
+                                @Override
+                                public Void call() throws Exception {
+                                    dialog.dismiss();
+                                    homepageActivity.openPlayerScreen(true);
+                                    return null;
+                                }
+                            }));
                             objetSongs.setHasFixedSize(true);
                             objetSongs.setLayoutManager(new LinearLayoutManager(homepageActivity, LinearLayoutManager.VERTICAL, false));
 
@@ -166,6 +174,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                     SongModel firstSong = homepageActivity.currentlyPlaying.get(homepageActivity.curPos);
                     if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
                     else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
+
+                    dialog.dismiss();
+                    homepageActivity.openPlayerScreen(true);
                 });
 
                 shuffle.setOnClickListener(v1 -> {
@@ -178,6 +189,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                     SongModel firstSong = homepageActivity.currentlyPlaying.get(homepageActivity.curPos);
                     if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
                     else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
+
+                    dialog.dismiss();
+                    homepageActivity.openPlayerScreen(true);
                 });
                 dialog.show();
                 RequestQueue requestQueue = Volley.newRequestQueue(homepageActivity);

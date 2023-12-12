@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.Callable;
 
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> {
     ArrayList<PlaylistModel> playlistModels;
@@ -135,7 +136,14 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                             }
                             Log.d("debugtest", String.valueOf(songsOfPlaylist.size()));
                             RecyclerView playlist = dialog.findViewById(R.id.songsRV);
-                            playlist.setAdapter(new SongAdapter(songsOfPlaylist,homepageActivity));
+                            playlist.setAdapter(new SongAdapter(songsOfPlaylist, homepageActivity, new Callable<Void>() {
+                                @Override
+                                public Void call() throws Exception {
+                                    dialog.dismiss();
+                                    homepageActivity.openPlayerScreen(true);
+                                    return null;
+                                }
+                            }));
                             playlist.setHasFixedSize(true);
                             playlist.setLayoutManager(new LinearLayoutManager(homepageActivity,LinearLayoutManager.VERTICAL,false));
 
@@ -165,6 +173,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                     SongModel firstSong = homepageActivity.currentlyPlaying.get(homepageActivity.curPos);
                     if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
                     else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
+
+                    dialog.dismiss();
+                    homepageActivity.openPlayerScreen(true);
                 });
 
                 shuffle.setOnClickListener(v1 -> {
@@ -177,6 +188,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                     SongModel firstSong = homepageActivity.currentlyPlaying.get(homepageActivity.curPos);
                     if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
                     else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
+
+                    dialog.dismiss();
+                    homepageActivity.openPlayerScreen(true);
                 });
                 dialog.show();
             });

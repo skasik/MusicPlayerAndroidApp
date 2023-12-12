@@ -418,8 +418,10 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         return songModel;
     }
 
-
     public void openPlayerScreen() {
+       openPlayerScreen(false);
+    }
+    public void openPlayerScreen(Boolean openUpcomingSongsList) {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View contentView = LayoutInflater.from(this).inflate(R.layout.playing_music, null);
         dialog.setContentView(contentView);
@@ -441,6 +443,11 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         upcomingSong.setOnClickListener(v -> {
             showUpcomingSongs(dialog);
         });
+        if (openUpcomingSongsList) {
+            new Handler().postDelayed(() -> {
+                showUpcomingSongs(dialog);
+            }, 300);
+        }
 
         LottieAnimationView playPauseBtn = dialog.findViewById(R.id.playPauseBtn);
         playPauseBtn.setOnClickListener(v -> {
@@ -564,6 +571,11 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         songRV.setHasFixedSize(true);
         songRV.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         dialog.show();
+        new Handler().postDelayed(() -> {
+            int height = songRV.getChildAt(curPos).getHeight();
+            NestedScrollView nestedScrollView = dialog.findViewById(R.id.scrollView);
+            nestedScrollView.smoothScrollTo(0, curPos * height);
+        }, 100);
 
 
     }

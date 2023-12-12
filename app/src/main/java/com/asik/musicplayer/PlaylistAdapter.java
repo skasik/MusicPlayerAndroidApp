@@ -27,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> {
     ArrayList<PlaylistModel> playlistModels;
@@ -92,6 +93,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED); // Set the initial state to expanded
 
                 ImageView dismiss = dialog.findViewById(R.id.dismiss);
+
+                ImageView playAll = dialog.findViewById(R.id.playAll);
+                ImageView shuffle = dialog.findViewById(R.id.shuffle);
                 dismiss.setOnClickListener(v1 -> {
                     dialog.dismiss();
                 });
@@ -153,6 +157,27 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
                 RequestQueue requestQueue = Volley.newRequestQueue(homepageActivity);
                 requestQueue.add(jsonObjectRequest);
+
+                playAll.setOnClickListener(v1 -> {
+                    homepageActivity.currentlyPlaying=songsOfPlaylist;
+                    homepageActivity.curPos=0;
+
+                    SongModel firstSong = homepageActivity.currentlyPlaying.get(homepageActivity.curPos);
+                    if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
+                    else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
+                });
+
+                shuffle.setOnClickListener(v1 -> {
+                    ArrayList<SongModel> temp = new ArrayList<>();
+                    temp.addAll(songsOfPlaylist);
+                    Collections.shuffle(temp);
+                    homepageActivity.currentlyPlaying =temp;
+                    homepageActivity.curPos=0;
+
+                    SongModel firstSong = homepageActivity.currentlyPlaying.get(homepageActivity.curPos);
+                    if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
+                    else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
+                });
                 dialog.show();
             });
 

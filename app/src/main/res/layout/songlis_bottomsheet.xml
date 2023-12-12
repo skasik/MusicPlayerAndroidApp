@@ -31,8 +31,8 @@
 
             <ImageView
                 android:id="@+id/songImage"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:layout_alignParentStart="true" />
 
         </LinearLayout>
@@ -49,12 +49,42 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:paddingStart="15dp"
         android:scrollHorizontally="true"
-        android:layout_marginBottom="20dp"
         android:singleLine="true"
         android:text="Album Name"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="20sp" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        >
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/play_all"
+            android:layout_gravity="center"
+            app:tint="@color/black"
+            android:backgroundTint="@color/black"
+            android:id="@+id/playAll"
+            android:layout_marginRight="50dp"
+
+
+            />
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/shuffle_icon"
+            android:layout_gravity="center"
+            app:tint="@color/black"
+            android:id="@+id/shuffle"
+
+            />
+
+
+    </LinearLayout>
+
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

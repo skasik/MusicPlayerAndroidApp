@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> {
     ArrayList<AlbumModel> albums;
@@ -88,13 +89,15 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
             album.setOnClickListener(v -> {
                 ArrayList<SongModel> songsOfThisAlbum = new ArrayList<>();
                 BottomSheetDialog dialog = new BottomSheetDialog(homepageActivity);
-
                 View contentView = LayoutInflater.from(homepageActivity).inflate(R.layout.songlis_bottomsheet, null);
                 dialog.setContentView(contentView);
 
                 View bottomSheet = (View) contentView.getParent();
                 BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED); // Set the initial state to expanded
+
+                ImageView playAll = dialog.findViewById(R.id.playAll);
+                ImageView shuffle = dialog.findViewById(R.id.shuffle);
 
                 ImageView dismiss = dialog.findViewById(R.id.dismiss);
                 dismiss.setOnClickListener(v1 -> {
@@ -156,9 +159,33 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                     }
                 });
 
+                playAll.setOnClickListener(v1 -> {
+                    homepageActivity.currentlyPlaying=songsOfThisAlbum;
+                    homepageActivity.curPos=0;
+
+                    SongModel firstSong = homepageActivity.currentlyPlaying.get(homepageActivity.curPos);
+                    if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
+                    else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
+                });
+
+                shuffle.setOnClickListener(v1 -> {
+                    ArrayList<SongModel> temp = new ArrayList<>();
+                    temp.addAll(songsOfThisAlbum);
+                    Collections.shuffle(temp);
+                    homepageActivity.currentlyPlaying =temp;
+                    homepageActivity.curPos=0;
+
+                    SongModel firstSong = homepageActivity.currentlyPlaying.get(homepageActivity.curPos);
+                    if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
+                    else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
+                });
                 dialog.show();
                 RequestQueue requestQueue = Volley.newRequestQueue(homepageActivity);
                 requestQueue.add(jsonObjectRequest);
+
+
+
+
             });
 
 

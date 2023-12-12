@@ -648,4 +648,8 @@ public class HomepageActivity extends AppCompatActivity {
             }
         }
     }
+    void playAll(SongModel song,int pos){
+
+
+    }
 }

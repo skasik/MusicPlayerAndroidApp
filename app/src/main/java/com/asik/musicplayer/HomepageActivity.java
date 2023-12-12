@@ -530,7 +530,7 @@ public class HomepageActivity extends AppCompatActivity {
             updateSeekbar();
         }, 10);
     }
-
+    ArrayList<SongModel> upcomingSongsList = new ArrayList<>();
     void updatePlayerScreen(BottomSheetDialog dialog) {
 
         if (!isPlayerScreenShown) return;
@@ -541,6 +541,15 @@ public class HomepageActivity extends AppCompatActivity {
         TextView endTime = dialog.findViewById(R.id.endTime);
         TextView currentTime = dialog.findViewById(R.id.currentTime);
         SeekBar seekPlaying = dialog.findViewById(R.id.seekPlaying);
+
+        if (currentlyPlaying.subList(curPos + 1, currentlyPlaying.size()).size() != upcomingSongsList.size()){
+            RecyclerView upcomingSongs = dialog.findViewById(R.id.upcomingRV);
+            upcomingSongsList = new ArrayList<>();
+            upcomingSongsList.addAll(currentlyPlaying.subList(curPos+1,currentlyPlaying.size()));
+            upcomingSongs.setAdapter(new SongAdapter(upcomingSongsList, this));
+            upcomingSongs.setHasFixedSize(true);
+            upcomingSongs.setLayoutManager(new LinearLayoutManager(HomepageActivity.this,LinearLayoutManager.VERTICAL,false));
+        }
 
 
 

@@ -150,7 +150,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                     artistName.setTextColor(homepageActivity.getResources().getColor(R.color.black));
                     duration.setTextColor(homepageActivity.getResources().getColor(R.color.black));
                     dot.setImageTintList(ColorStateList.valueOf(homepageActivity.getResources().getColor(R.color.black)));
-                    playingAnim.setVisibility(View.VISIBLE);
+                    if (homepageActivity.player!=null && homepageActivity.player.isPlaying())
+                        playingAnim.setVisibility(View.VISIBLE);
+                    else playingAnim.setVisibility(View.INVISIBLE);
 
                 } else {
                     playMusic.setBackgroundColor(homepageActivity.getResources().getColor(R.color.background));
@@ -158,7 +160,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                     artistName.setTextColor(homepageActivity.getResources().getColor(R.color.text_color2));
                     duration.setTextColor(homepageActivity.getResources().getColor(R.color.text_color2));
                     dot.setImageTintList(ColorStateList.valueOf(homepageActivity.getResources().getColor(R.color.text_color2)));
-                    playingAnim.setVisibility(View.GONE);
+                    playingAnim.setVisibility(View.INVISIBLE);
                 }
             }
 

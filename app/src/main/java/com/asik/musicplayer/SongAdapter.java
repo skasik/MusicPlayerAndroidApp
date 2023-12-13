@@ -1,5 +1,6 @@
 package com.asik.musicplayer;
 
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
@@ -80,6 +81,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         TextView artistName;
         TextView duration;
         View playMusic;
+        ImageView dot;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -88,7 +90,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             songImage = itemView.findViewById(R.id.songImage);
             duration = itemView.findViewById(R.id.duration);
             playMusic = itemView.findViewById(R.id.playMusic);
-
+            dot = itemView.findViewById(R.id.dot);
 
         }
 
@@ -96,6 +98,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             songName.setText(songModel.getName());
             artistName.setText(songModel.getFeaturedArtists());
             duration.setText(songModel.getDuration());
+            if (songModel.getDuration().trim().equals("")) dot.setVisibility(View.GONE);
             Glide.with(homepageActivity).load(songModel.getImage())
                     .thumbnail(Glide.with(homepageActivity).load(songModel.getThumbnail()))
                     .into(songImage);
@@ -139,9 +142,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             if (homepageActivity.currentlyPlaying.size() > 0) {
                 SongModel current = homepageActivity.currentlyPlaying.get(homepageActivity.curPos);
                 if (current.getId().equals(songModel.getId()) && !current.getId().equals("")) {
-                    playMusic.setBackgroundColor(homepageActivity.getResources().getColor(R.color.play_bar));
+                    playMusic.setBackgroundColor(homepageActivity.getResources().getColor(R.color.accent1));
+                    songName.setTextColor(homepageActivity.getResources().getColor(R.color.black));
+                    artistName.setTextColor(homepageActivity.getResources().getColor(R.color.black));
+                    duration.setTextColor(homepageActivity.getResources().getColor(R.color.black));
+                    dot.setImageTintList(ColorStateList.valueOf(homepageActivity.getResources().getColor(R.color.black)));
                 } else {
-                    playMusic.setBackgroundColor(homepageActivity.getResources().getColor(R.color.white));
+                    playMusic.setBackgroundColor(homepageActivity.getResources().getColor(R.color.background));
+                    songName.setTextColor(homepageActivity.getResources().getColor(R.color.text_color1));
+                    artistName.setTextColor(homepageActivity.getResources().getColor(R.color.text_color2));
+                    duration.setTextColor(homepageActivity.getResources().getColor(R.color.text_color2));
+                    dot.setImageTintList(ColorStateList.valueOf(homepageActivity.getResources().getColor(R.color.text_color2)));
                 }
             }
 

@@ -37,7 +37,7 @@
         android:paddingStart="15dp"
         android:text="Album Name"
         android:fontFamily="@font/poppins_semibold"
-        android:textColor="@color/black"
+        android:textColor="@color/text_color1"
         android:textSize="12sp" />
     <RelativeLayout
         android:layout_width="match_parent"
@@ -52,7 +52,7 @@
             android:maxLines="1"
             android:paddingStart="15dp"
             android:text="Artists Name"
-            android:textColor="#FF989898"
+            android:textColor="@color/text_color2"
             android:textSize="8sp" />
         <TextView
             android:id="@+id/songCount"
@@ -65,7 +65,7 @@
             android:paddingStart="15dp"
             android:text="Song Count"
             android:paddingRight="10dp"
-            android:textColor="#FF989898"
+            android:textColor="@color/text_color2"
             android:visibility="gone"
             android:textSize="8sp" />
 

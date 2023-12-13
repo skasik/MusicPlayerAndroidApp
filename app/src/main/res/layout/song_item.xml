@@ -37,7 +37,7 @@
         android:maxLines="2"
         android:paddingStart="15dp"
         android:text="Song Name"
-        android:textColor="@color/black"
+        android:textColor="@color/text_color1"
         android:textSize="18sp" />
 
     <LinearLayout
@@ -60,7 +60,7 @@
             android:maxLines="1"
             android:paddingStart="15dp"
             android:text="Artist Name"
-            android:textColor="@color/gray"
+            android:textColor="@color/text_color2"
             android:textSize="12sp" />
 
         <ImageView
@@ -72,7 +72,7 @@
             android:gravity="center"
             android:paddingStart="5dp"
             android:src="@drawable/ic_circle"
-            app:tint="@color/gray" />
+            app:tint="@color/text_color2" />
 
         <TextView
             android:id="@+id/duration"
@@ -83,7 +83,7 @@
             android:fontFamily="@font/poppins"
             android:paddingStart="5dp"
             android:text="Duration"
-            android:textColor="@color/gray"
+            android:textColor="@color/text_color2"
             android:textSize="12sp" />
     </LinearLayout>
 

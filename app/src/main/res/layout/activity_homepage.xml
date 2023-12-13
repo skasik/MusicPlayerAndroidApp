@@ -4,15 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".HomepageActivity">
+    tools:context=".HomepageActivity"
+    android:background="@color/background"
+    >
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottomParent">
+        android:layout_above="@id/bottomParent"
+
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -183,8 +186,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_extrabold"
                     android:text="Songs"
-
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color1"
                     android:textSize="30sp"
 
                     />
@@ -203,7 +205,7 @@
                     android:layout_marginTop="40dp"
                     android:fontFamily="@font/poppins_extrabold"
                     android:text="Albums"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color1"
                     android:textSize="30sp"
 
                     />
@@ -221,7 +223,7 @@
                     android:layout_marginTop="40dp"
                     android:fontFamily="@font/poppins_extrabold"
                     android:text="Trending Now"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color1"
                     android:textSize="30sp"
 
                     />
@@ -240,7 +242,7 @@
                     android:layout_marginTop="40dp"
                     android:fontFamily="@font/poppins_extrabold"
                     android:text="Playlists"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color1"
                     android:textSize="30sp"
 
                     />
@@ -261,12 +263,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone"
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/play_bar"
+                    android:background="@color/accent3"
                     android:gravity="center_vertical"
                     android:minHeight="60dp">
 
@@ -276,6 +279,9 @@
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
                         android:hint="Search for a song"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/gray"
+                        android:paddingHorizontal="20dp"
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:maxLines="1" />
@@ -299,7 +305,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/seekbar"
-        android:background="@color/play_bar"
+        android:background="@color/accent1"
         android:paddingHorizontal="20dp"
         android:paddingTop="10dp"
         android:paddingBottom="5dp"
@@ -384,9 +390,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:src="@drawable/play"
-
-
-                />
+                app:tint="@color/black" />
 
             <ImageView
                 android:id="@+id/pauseButton"
@@ -394,7 +398,8 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:src="@drawable/pause"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:tint="@color/black" />
 
             <!--                <ImageView-->
             <!--                    android:id="@+id/nextButton"-->
@@ -433,6 +438,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/bottom_bar_icon_size"
             android:layout_weight="1"
+            app:tint="@color/text_color1"
             android:padding="10dp"
             android:src="@drawable/home_button" />
 
@@ -442,6 +448,7 @@
             android:layout_height="@dimen/bottom_bar_icon_size"
             android:layout_weight="1"
             android:padding="10dp"
+            app:tint="@color/text_color1"
             android:src="@drawable/search_button" />
 
         <ImageView
@@ -449,7 +456,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/bottom_bar_icon_size"
             android:layout_weight="1"
-
+            app:tint="@color/text_color1"
             android:padding="10dp"
             android:src="@drawable/fav_button" />
 
@@ -459,7 +466,8 @@
             android:layout_height="@dimen/bottom_bar_icon_size"
             android:layout_weight="1"
             android:padding="10dp"
-            android:src="@drawable/profile_button" />
+            android:src="@drawable/profile_button"
+            app:tint="@color/text_color1" />
 
     </LinearLayout>
 

@@ -7,6 +7,7 @@ import static com.asik.musicplayer.MusicApplication.CHANNEL2_ID;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -19,9 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -41,6 +44,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -108,6 +112,11 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         search.setOnClickListener(v -> {
             ((LinearLayout)findViewById(R.id.searchLayout)).setVisibility(View.VISIBLE);
             ((LinearLayout)findViewById(R.id.homeScreen)).setVisibility(View.GONE);
+            new Handler().postDelayed(() -> {
+                ((EditText)findViewById(R.id.searchElementID)).requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(((EditText)findViewById(R.id.searchElementID)), InputMethodManager.SHOW_IMPLICIT);
+            }, 500);
         });
         ImageView homeButton = findViewById(R.id.homeButton);
         homeButton.setOnClickListener(v -> {
@@ -123,7 +132,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 String searchQuery = searched.getText().toString().trim().toLowerCase();
                 searchSongs(searchAPI+Uri.encode(searchQuery));
-
+                hideKeyboard(HomepageActivity.this);
                 return true;
             }
         });
@@ -202,7 +211,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                         Button btn2 = findViewById(languageModel1.getButtonId());
                         btn2.setBackgroundColor(getResources().getColor(R.color.gray));
                     });
-                    ((Button) findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.black));
+                    ((Button) findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.accent3));
                     selectedLanguages = new ArrayList<>();
                     loadHomePage(languageModel.getParameter());
                     ed.putString("languages", "").commit();
@@ -212,7 +221,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                         btn.setBackgroundColor(getResources().getColor(R.color.gray));
                         selectedLanguages = LanguageModel.removeLanguage(languageModel, selectedLanguages);
                     } else {
-                        btn.setBackgroundColor(getResources().getColor(R.color.black));
+                        btn.setBackgroundColor(getResources().getColor(R.color.accent3));
                         selectedLanguages.add(languageModel);
                     }
 
@@ -240,7 +249,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
         languageParam = sp.getString("languages", "");
         if (languageParam.equals("")) {
-            ((Button) findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.black));
+            ((Button) findViewById(R.id.allSong)).setBackgroundColor(getResources().getColor(R.color.accent3));
             loadHomePage(languageModels.get(0).getParameter());
         } else {
             selectedLanguages = new ArrayList<>();
@@ -248,7 +257,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             languageModels.forEach(languageModel -> {
                 if (languageParam.contains(languageModel.getParameter())) {
                     selectedLanguages.add(languageModel);
-                    ((Button) findViewById(languageModel.getButtonId())).setBackgroundColor(getResources().getColor(R.color.black));
+                    ((Button) findViewById(languageModel.getButtonId())).setBackgroundColor(getResources().getColor(R.color.accent3));
                 }
             });
             loadHomePage(languageParam);
@@ -300,6 +309,17 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
         RequestQueue requestQueue = Volley.newRequestQueue(HomepageActivity.this);
         requestQueue.add(jsonObjectRequest);
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override

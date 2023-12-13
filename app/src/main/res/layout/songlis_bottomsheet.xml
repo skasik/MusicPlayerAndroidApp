@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/background"
     android:gravity="center_horizontal"
     android:minHeight="900dp"
     android:orientation="vertical">
@@ -52,7 +52,7 @@
         android:singleLine="true"
         android:text="Album Name"
         android:textAlignment="center"
-        android:textColor="@color/black"
+        android:textColor="@color/text_color1"
         android:textSize="20sp" />
     <LinearLayout
         android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
             android:src="@drawable/play_all"
             android:layout_gravity="center"
             app:tint="@color/black"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="@color/text_color1"
             android:id="@+id/playAll"
             android:layout_marginRight="50dp"
 
@@ -77,7 +77,7 @@
             android:layout_height="50dp"
             android:src="@drawable/shuffle_icon"
             android:layout_gravity="center"
-            app:tint="@color/black"
+            app:tint="@color/text_color1"
             android:id="@+id/shuffle"
 
             />

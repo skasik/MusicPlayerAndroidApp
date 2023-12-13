@@ -616,15 +616,16 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
 //        behavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottomsheet_height));
 
-        TextView songName = dialog.findViewById(R.id.songName);
-        TextView artistName = dialog.findViewById(R.id.artistName);
-
-        songName.setSelected(true);
-        artistName.setSelected(true);
+        TextView songName = dialog.findViewById(R.id.songNameBS);
+        TextView artistName = dialog.findViewById(R.id.artistNameBS);
 
         isPlayerScreenShown = true;
         updatePlayerScreen(dialog);
         dialog.show();
+
+        songName.setSelected(true);
+        artistName.setSelected(true);
+
     }
 
     public void showUpcomingSongs(BottomSheetDialog parentDialog) {
@@ -753,8 +754,8 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
         if (!isPlayerScreenShown) return;
 
-        TextView songName = dialog.findViewById(R.id.songName);
-        TextView artistName = dialog.findViewById(R.id.artistName);
+        TextView songName = dialog.findViewById(R.id.songNameBS);
+        TextView artistName = dialog.findViewById(R.id.artistNameBS);
         ImageView songImage = dialog.findViewById(R.id.songImage);
         TextView endTime = dialog.findViewById(R.id.endTime);
         TextView currentTime = dialog.findViewById(R.id.currentTime);
@@ -773,9 +774,11 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
             SongModel currentPlayingSong = currentlyPlaying.get(curPos);
 
-            songName.setText(currentPlayingSong.getName());
+            if (!currentPlayingSong.getName().equals(songName.getText().toString()))
+                songName.setText(currentPlayingSong.getName());
 
-            artistName.setText(currentPlayingSong.getFeaturedArtists());
+            if (!currentPlayingSong.getFeaturedArtists().equals(artistName.getText().toString()))
+                artistName.setText(currentPlayingSong.getFeaturedArtists());
             endTime.setText(SongModel.convertDuration(Integer.valueOf(player.getDuration() / 1000)));
             Glide.with(this).load(currentPlayingSong.getImage()).thumbnail(Glide.with(this).load(currentPlayingSong.getThumbnail())).into(songImage);
 

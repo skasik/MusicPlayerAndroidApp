@@ -7,14 +7,11 @@ import static com.asik.musicplayer.MusicApplication.CHANNEL2_ID;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +30,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.session.MediaSession;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -95,7 +91,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         onBackPressedDispatcher.addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (((LinearLayout)findViewById(R.id.homeScreen)).getVisibility() == View.VISIBLE) {
+                if (((LinearLayout) findViewById(R.id.homeScreen)).getVisibility() == View.VISIBLE) {
                     NestedScrollView nestedScrollView = findViewById(R.id.scrollbar);
                     if (nestedScrollView.canScrollVertically(-1)) {
                         nestedScrollView.smoothScrollTo(0, 0);
@@ -105,29 +101,28 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                         moveTaskToBack(true);
 
                     }
-                }
-                else {
-                    ((LinearLayout)findViewById(R.id.searchLayout)).setVisibility(View.GONE);
-                    ((LinearLayout)findViewById(R.id.homeScreen)).setVisibility(View.VISIBLE);
+                } else {
+                    ((LinearLayout) findViewById(R.id.searchLayout)).setVisibility(View.GONE);
+                    ((LinearLayout) findViewById(R.id.homeScreen)).setVisibility(View.VISIBLE);
                 }
 
             }
         });
         ImageView search = findViewById(R.id.searchButton);
         search.setOnClickListener(v -> {
-            ((LinearLayout)findViewById(R.id.searchLayout)).setVisibility(View.VISIBLE);
-            ((LinearLayout)findViewById(R.id.homeScreen)).setVisibility(View.GONE);
+            ((LinearLayout) findViewById(R.id.searchLayout)).setVisibility(View.VISIBLE);
+            ((LinearLayout) findViewById(R.id.homeScreen)).setVisibility(View.GONE);
             new Handler().postDelayed(() -> {
-                ((EditText)findViewById(R.id.searchElementID)).requestFocus();
+                ((EditText) findViewById(R.id.searchElementID)).requestFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(((EditText)findViewById(R.id.searchElementID)), InputMethodManager.SHOW_IMPLICIT);
+                imm.showSoftInput(((EditText) findViewById(R.id.searchElementID)), InputMethodManager.SHOW_IMPLICIT);
             }, 500);
         });
         ImageView homeButton = findViewById(R.id.homeButton);
         homeButton.setOnClickListener(v -> {
 
-            ((LinearLayout)findViewById(R.id.searchLayout)).setVisibility(View.GONE);
-            ((LinearLayout)findViewById(R.id.homeScreen)).setVisibility(View.VISIBLE);
+            ((LinearLayout) findViewById(R.id.searchLayout)).setVisibility(View.GONE);
+            ((LinearLayout) findViewById(R.id.homeScreen)).setVisibility(View.VISIBLE);
         });
 
         EditText searched = findViewById(R.id.searchElementID);
@@ -136,7 +131,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 String searchQuery = searched.getText().toString().trim().toLowerCase();
-                searchSongs(searchAPI+Uri.encode(searchQuery));
+                searchSongs(searchAPI + Uri.encode(searchQuery));
                 hideKeyboard(HomepageActivity.this);
                 return true;
             }
@@ -278,10 +273,10 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             public void onResponse(JSONObject response) {
                 try {
 
-                    JSONArray results =response.getJSONObject("data").getJSONArray("results");
-                    for (int i =0;i<results.length();i++){
+                    JSONArray results = response.getJSONObject("data").getJSONArray("results");
+                    for (int i = 0; i < results.length(); i++) {
                         SongModel songModel = new SongModel();
-                        songModel.setName( results.getJSONObject(i).getString("name"));
+                        songModel.setName(results.getJSONObject(i).getString("name"));
                         songModel.setId(results.getJSONObject(i).getString("id"));
                         songModel.setDuration(results.getJSONObject(i).getString("duration"));
                         songModel.setLanguage(results.getJSONObject(i).getString("language"));
@@ -297,18 +292,18 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                     }
 
                     RecyclerView searchedRV = findViewById(R.id.searchItemRV);
-                    searchedRV.setAdapter(new SongAdapter(searchedSongs,HomepageActivity.this,true));
+                    searchedRV.setAdapter(new SongAdapter(searchedSongs, HomepageActivity.this, true));
                     searchedRV.setHasFixedSize(true);
-                    searchedRV.setLayoutManager(new LinearLayoutManager(HomepageActivity.this,LinearLayoutManager.VERTICAL,false));
+                    searchedRV.setLayoutManager(new LinearLayoutManager(HomepageActivity.this, LinearLayoutManager.VERTICAL, false));
 
-                }catch (Exception e){
-                    Toast.makeText(HomepageActivity.this,"Not Found",Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(HomepageActivity.this, "Not Found", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(HomepageActivity.this,"Not Found",Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomepageActivity.this, "Not Found", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -449,13 +444,18 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                         songModel.setDuration(song.getJSONObject(j).getString("duration"));
                         JSONArray artists = song.getJSONObject(j).getJSONArray("primaryArtists");
                         String featuredArtists = "";
+                        String featuredArtistId = "";
                         for (int k = 0; k < artists.length(); ++k) {
                             if (!featuredArtists.equals(""))
                                 featuredArtists += ", ";
                             featuredArtists += artists.getJSONObject(k).getString("name");
+                            if (!featuredArtistId.equals(""))
+                                featuredArtistId += ", ";
+                            featuredArtistId += artists.getJSONObject(k).getString("id");
                         }
 
                         songModel.setFeaturedArtists(featuredArtists);
+                        songModel.setArtistId(featuredArtistId);
 //                        songModel.setFeaturedArtists(song.getJSONObject(j).getString("featuredArtists"));
                         songModel.setUrl(song.getJSONObject(j).getString("url"));
                         JSONArray image = song.getJSONObject(j).getJSONArray("image");
@@ -469,7 +469,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                     }
 
                     RecyclerView songAD = findViewById(R.id.songsRV);
-                    songAD.setAdapter(new SongAdapter(songs, HomepageActivity.this,false));
+                    songAD.setAdapter(new SongAdapter(songs, HomepageActivity.this, false));
                     LinearLayoutManager llm = new LinearLayoutManager(HomepageActivity.this, LinearLayoutManager.VERTICAL, false);
                     llm.setAutoMeasureEnabled(true);
                     songAD.setLayoutManager(llm);
@@ -509,8 +509,9 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
     }
 
     public void openPlayerScreen() {
-       openPlayerScreen(false);
+        openPlayerScreen(false);
     }
+
     public void openPlayerScreen(Boolean openUpcomingSongsList) {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View contentView = LayoutInflater.from(this).inflate(R.layout.playing_music, null);
@@ -635,25 +636,25 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
     public void showUpcomingSongs(BottomSheetDialog parentDialog) {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
-        View songs = LayoutInflater.from(this).inflate(R.layout.songlis_bottomsheet,null);
+        View songs = LayoutInflater.from(this).inflate(R.layout.songlis_bottomsheet, null);
         dialog.setContentView(songs);
 
 
-        TextView name=dialog.findViewById(R.id.albumName);
+        TextView name = dialog.findViewById(R.id.albumName);
         name.setText("Currently Playing");
 
-        ((ImageView)dialog.findViewById(R.id.dismiss)).setOnClickListener(v -> {
+        ((ImageView) dialog.findViewById(R.id.dismiss)).setOnClickListener(v -> {
             dialog.dismiss();
         });
 
-        ((ImageView)dialog.findViewById(R.id.songImage)).setVisibility(View.GONE);
-        ((ImageView)dialog.findViewById(R.id.playAll)).setVisibility(View.GONE);
-        ((ImageView)dialog.findViewById(R.id.shuffle)).setVisibility(View.GONE);
+        ((ImageView) dialog.findViewById(R.id.songImage)).setVisibility(View.GONE);
+        ((ImageView) dialog.findViewById(R.id.playAll)).setVisibility(View.GONE);
+        ((ImageView) dialog.findViewById(R.id.shuffle)).setVisibility(View.GONE);
         RecyclerView songRV = dialog.findViewById(R.id.songsRV);
         songRV.setAdapter(new SongAdapter(currentlyPlaying, HomepageActivity.this, new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                if (parentDialog != null){
+                if (parentDialog != null) {
                     LottieAnimationView playPauseBtn = parentDialog.findViewById(R.id.playPauseBtn);
 
                     if (player != null) {
@@ -672,7 +673,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             }
         }));
         songRV.setHasFixedSize(true);
-        songRV.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        songRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         dialog.show();
         new Handler().postDelayed(() -> {
             int height = songRV.getChildAt(curPos).getHeight();
@@ -683,7 +684,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
     }
 
-    public void showUpcomingSongs(){
+    public void showUpcomingSongs() {
         showUpcomingSongs(null);
     }
 
@@ -754,7 +755,9 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             updateSeekbar();
         }, 10);
     }
+
     ArrayList<SongModel> upcomingSongsList = new ArrayList<>();
+
     void updatePlayerScreen(BottomSheetDialog dialog) {
 
         if (!isPlayerScreenShown) return;
@@ -804,6 +807,10 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
     void startPlayingSong(SongModel songModel, int pos) {
         try {
+            if (pos == currentlyPlaying.size() - 1) {
+                loadRecommendedSongs(currentlyPlaying.get(pos));
+                Log.d("debugTest", String.valueOf(pos));
+            }
             if (player != null) {
                 player.stop();
                 player.reset();
@@ -820,8 +827,14 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
+
+                    if (pos == currentlyPlaying.size() - 1) {
+                        loadRecommendedSongs(currentlyPlaying.get(pos));
+                    }
                     playNextSong();
                 }
+
+
             });
 
 
@@ -833,7 +846,72 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         }
     }
 
+    public void loadRecommendedSongs(SongModel songModel) {
+        String recommendedSongsAPI = "https://saavn.me/artists/";
+        String ss = songModel.getId().trim();
+        ArrayList<String> artistID = songModel.getArtistId();
+        artistID.forEach(v1 -> {
+            String recAPI = recommendedSongsAPI + v1.trim() + "/recommendations/" + ss;
+
+            Log.d("debugTest", recAPI);
+            Log.d("debugTest", v1);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(recAPI, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        JSONArray results = response.getJSONArray("data");
+                        for (int i = 0; i < results.length(); i++) {
+                            boolean bool = true;
+                            SongModel recommended = new SongModel();
+                            recommended.setName(results.getJSONObject(i).getString("name"));
+                            recommended.setId(results.getJSONObject(i).getString("id"));
+                            recommended.setDuration(results.getJSONObject(i).getString("duration"));
+                            recommended.setLanguage(results.getJSONObject(i).getString("language"));
+                            recommended.setUrl(results.getJSONObject(i).getString("url"));
+                            recommended.setFeaturedArtists(results.getJSONObject(i).getString("primaryArtists"));
+                            recommended.setArtistId(results.getJSONObject(i).getString("primaryArtistsId"));
+                            JSONArray image = results.getJSONObject(i).getJSONArray("image");
+                            recommended.setImage(image.getJSONObject(image.length() - 1).getString("link"));
+                            for (int j = 0; j < currentlyPlaying.size(); j++) {
+                                if (currentlyPlaying.get(j).getId().equals(recommended.getId())){
+                                    bool = false;
+                                    break;
+                                }
+
+                            }
+                            if(bool==true)currentlyPlaying.add(recommended);
+
+                        }
+
+
+                    } catch (Exception e) {
+
+                        Toast.makeText(HomepageActivity.this, "failed to load the song", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    Toast.makeText(HomepageActivity.this, "failed to load the song", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            RequestQueue requestQueue = Volley.newRequestQueue(HomepageActivity.this);
+            requestQueue.add(jsonObjectRequest);
+
+        });
+
+
+    }
+
     void fetchSongDownloadURL(SongModel song, int pos) {
+        if (pos == currentlyPlaying.size() - 1) {
+            loadRecommendedSongs(currentlyPlaying.get(pos));
+            Log.d("debugTest", String.valueOf(pos));
+        }
         String API_LINK = "https://saavn.me/songs?id=" + song.getId();
         Toast.makeText(this, "Loading song...", Toast.LENGTH_SHORT).show();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API_LINK, new Response.Listener<JSONObject>() {
@@ -880,7 +958,8 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             }
         }
     }
-    void playAll(SongModel song,int pos){
+
+    void playAll(SongModel song, int pos) {
 
 
     }
@@ -917,10 +996,10 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background);
         try {
-            if (player!=null && currentlyPlaying.size()>0){
+            if (player != null && currentlyPlaying.size() > 0) {
                 largeIcon = Glide.with(this).asBitmap().load(currentlyPlaying.get(curPos).getImage()).submit().get();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -962,10 +1041,10 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
     @Override
     public void playClicked() {
-        if (player!=null && play!=null && pause!=null){
-            if (player.isPlaying()){
+        if (player != null && play != null && pause != null) {
+            if (player.isPlaying()) {
                 pause.callOnClick();
-            }else {
+            } else {
                 play.callOnClick();
             }
         }

@@ -93,7 +93,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             duration = itemView.findViewById(R.id.duration);
             playMusic = itemView.findViewById(R.id.playMusic);
             dot = itemView.findViewById(R.id.dot);
-            playingAnim =itemView.findViewById(R.id.playing_anim);
+            playingAnim = itemView.findViewById(R.id.playing_anim);
 
         }
 
@@ -107,38 +107,37 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                     .into(songImage);
 
             playMusic.setOnClickListener(v -> {
-                        if (aBoolean) {
-                            loadRecommendedSongs(songModel, new Callable<Void>() {
-                                @Override
-                                public Void call() throws Exception {
-                                    if (songModel.getDownloadUrl().equals(""))
-                                        homepageActivity.fetchSongDownloadURL(homepageActivity.currentlyPlaying.get(homepageActivity.curPos), homepageActivity.curPos);
-                                    else {
-                                        homepageActivity.startPlayingSong(homepageActivity.currentlyPlaying.get(homepageActivity.curPos), homepageActivity.curPos);
-                                    }
-                                    return null;
-                                }
-                            });
-
-
-                        }
-                        else {
-                            homepageActivity.currentlyPlaying = musics;
-                            homepageActivity.curPos = position;
+                if (aBoolean) {
+                    loadRecommendedSongs(songModel, new Callable<Void>() {
+                        @Override
+                        public Void call() throws Exception {
                             if (songModel.getDownloadUrl().equals(""))
-                                homepageActivity.fetchSongDownloadURL(songModel, position);
+                                homepageActivity.fetchSongDownloadURL(homepageActivity.currentlyPlaying.get(homepageActivity.curPos), homepageActivity.curPos);
                             else {
-                                homepageActivity.startPlayingSong(songModel, position);
+                                homepageActivity.startPlayingSong(homepageActivity.currentlyPlaying.get(homepageActivity.curPos), homepageActivity.curPos);
                             }
-
-                            try {
-                                onClick.call();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            return null;
                         }
-                        });
-                    checkIfPlaying(songModel);
+                    });
+
+
+                } else {
+                    homepageActivity.currentlyPlaying = musics;
+                    homepageActivity.curPos = position;
+                    if (songModel.getDownloadUrl().equals(""))
+                        homepageActivity.fetchSongDownloadURL(songModel, position);
+                    else {
+                        homepageActivity.startPlayingSong(songModel, position);
+                    }
+
+                    try {
+                        onClick.call();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            checkIfPlaying(songModel);
         }
 
         void checkIfPlaying(SongModel songModel) {
@@ -150,9 +149,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                     artistName.setTextColor(homepageActivity.getResources().getColor(R.color.black));
                     duration.setTextColor(homepageActivity.getResources().getColor(R.color.black));
                     dot.setImageTintList(ColorStateList.valueOf(homepageActivity.getResources().getColor(R.color.black)));
-                    if (homepageActivity.player!=null && homepageActivity.player.isPlaying())
-                        playingAnim.setVisibility(View.VISIBLE);
-                    else playingAnim.setVisibility(View.INVISIBLE);
+                    if (homepageActivity.player != null) {
+                        if (homepageActivity.player.isPlaying())
+                            playingAnim.setVisibility(View.VISIBLE);
+                        else playingAnim.setVisibility(View.INVISIBLE);
+                    }
 
                 } else {
                     playMusic.setBackgroundColor(homepageActivity.getResources().getColor(R.color.background));
@@ -176,9 +177,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             String ss = songModel.getId().trim();
             ArrayList<String> artistID = songModel.getArtistId();
             artistID.forEach(v1 -> {
-                String recAPI = recommendedSongsAPI + v1.trim() + "/recommendations/" +ss;
+                String recAPI = recommendedSongsAPI + v1.trim() + "/recommendations/" + ss;
 
-                Log.d("debugTest",recAPI);Log.d("debugTest",v1);
+                Log.d("debugTest", recAPI);
+                Log.d("debugTest", v1);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(recAPI, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -197,7 +199,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                                 recommended.setImage(image.getJSONObject(image.length() - 1).getString("link"));
                                 recommendedSongs.add(recommended);
                             }
-                            homepageActivity.curPos=0;
+                            homepageActivity.curPos = 0;
                             homepageActivity.currentlyPlaying = recommendedSongs;
                             if (afterResponse != null) {
                                 try {

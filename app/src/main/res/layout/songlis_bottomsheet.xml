@@ -65,7 +65,7 @@
             android:layout_height="60dp"
             android:src="@drawable/play_all"
             android:layout_gravity="center"
-            app:tint="@color/black"
+            app:tint="@color/text_color1"
             android:backgroundTint="@color/text_color1"
             android:id="@+id/playAll"
             android:layout_marginRight="50dp"

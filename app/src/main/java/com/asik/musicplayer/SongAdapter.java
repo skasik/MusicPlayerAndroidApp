@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -82,6 +83,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         TextView duration;
         View playMusic;
         ImageView dot;
+        LottieAnimationView playingAnim;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -91,6 +93,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             duration = itemView.findViewById(R.id.duration);
             playMusic = itemView.findViewById(R.id.playMusic);
             dot = itemView.findViewById(R.id.dot);
+            playingAnim =itemView.findViewById(R.id.playing_anim);
 
         }
 
@@ -147,12 +150,15 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                     artistName.setTextColor(homepageActivity.getResources().getColor(R.color.black));
                     duration.setTextColor(homepageActivity.getResources().getColor(R.color.black));
                     dot.setImageTintList(ColorStateList.valueOf(homepageActivity.getResources().getColor(R.color.black)));
+                    playingAnim.setVisibility(View.VISIBLE);
+
                 } else {
                     playMusic.setBackgroundColor(homepageActivity.getResources().getColor(R.color.background));
                     songName.setTextColor(homepageActivity.getResources().getColor(R.color.text_color1));
                     artistName.setTextColor(homepageActivity.getResources().getColor(R.color.text_color2));
                     duration.setTextColor(homepageActivity.getResources().getColor(R.color.text_color2));
                     dot.setImageTintList(ColorStateList.valueOf(homepageActivity.getResources().getColor(R.color.text_color2)));
+                    playingAnim.setVisibility(View.GONE);
                 }
             }
 

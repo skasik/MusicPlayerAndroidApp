@@ -95,15 +95,20 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         onBackPressedDispatcher.addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                NestedScrollView nestedScrollView = findViewById(R.id.scrollbar);
-                if (nestedScrollView.canScrollVertically(-1)){
-                    nestedScrollView.smoothScrollTo(0,0);
+                if (((LinearLayout)findViewById(R.id.homeScreen)).getVisibility() == View.VISIBLE) {
+                    NestedScrollView nestedScrollView = findViewById(R.id.scrollbar);
+                    if (nestedScrollView.canScrollVertically(-1)) {
+                        nestedScrollView.smoothScrollTo(0, 0);
+                    } else {
+//                    finish();
+                        //move activity to back
+                        moveTaskToBack(true);
+
+                    }
                 }
                 else {
-//                    finish();
-                    //move activity to back
-                    moveTaskToBack(true);
-
+                    ((LinearLayout)findViewById(R.id.searchLayout)).setVisibility(View.GONE);
+                    ((LinearLayout)findViewById(R.id.homeScreen)).setVisibility(View.VISIBLE);
                 }
 
             }

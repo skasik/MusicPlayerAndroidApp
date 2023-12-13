@@ -21,7 +21,8 @@ public class SongModel {
 
     public ArrayList<String> getArtistId() {
 
-        return artistId;
+        if (artistId.size() <=2) return artistId;
+        return new ArrayList<>(artistId.subList(0, 2));
     }
 
     public void setArtistId(String artistId) {
@@ -53,6 +54,7 @@ public class SongModel {
         this.url = "";
         this.image = "";
         this.language = "";
+        this.artistId = new ArrayList<>();
         this.thumbnail = "";
     }
 

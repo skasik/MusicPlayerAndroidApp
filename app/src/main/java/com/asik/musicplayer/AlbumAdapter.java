@@ -89,27 +89,27 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
 
             album.setOnClickListener(v -> {
                 ArrayList<SongModel> songsOfThisAlbum = new ArrayList<>();
-                BottomSheetDialog dialog = new BottomSheetDialog(homepageActivity);
+                homepageActivity.songListDialog = new BottomSheetDialog(homepageActivity);
                 View contentView = LayoutInflater.from(homepageActivity).inflate(R.layout.songlis_bottomsheet, null);
-                dialog.setContentView(contentView);
+                homepageActivity.songListDialog.setContentView(contentView);
 
                 View bottomSheet = (View) contentView.getParent();
                 BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED); // Set the initial state to expanded
 
-                ImageView playAll = dialog.findViewById(R.id.playAll);
-                ImageView shuffle = dialog.findViewById(R.id.shuffle);
+                ImageView playAll = homepageActivity.songListDialog.findViewById(R.id.playAll);
+                ImageView shuffle = homepageActivity.songListDialog.findViewById(R.id.shuffle);
 
-                ImageView dismiss = dialog.findViewById(R.id.dismiss);
+                ImageView dismiss = homepageActivity.songListDialog.findViewById(R.id.dismiss);
                 dismiss.setOnClickListener(v1 -> {
-                    dialog.dismiss();
+                    homepageActivity.songListDialog.dismiss();
                 });
 
-                TextView albumen = dialog.findViewById(R.id.albumName);
+                TextView albumen = homepageActivity.songListDialog.findViewById(R.id.albumName);
                 albumen.setSelected(true);
                 albumen.setText(albumModel.getName());
 
-                ImageView im = dialog.findViewById(R.id.songImage);
+                ImageView im = homepageActivity.songListDialog.findViewById(R.id.songImage);
                 Glide.with(homepageActivity).load(albumModel.getImage()).into(im);
                 String ALBUM_API = "https://saavn.me/albums?id="+albumModel.getId();
                 Log.d("debugTest", ALBUM_API);
@@ -140,11 +140,11 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
 
                             }
 
-                            RecyclerView objetSongs = dialog.findViewById(R.id.songsRV);
+                            RecyclerView objetSongs = homepageActivity.songListDialog.findViewById(R.id.songsRV);
                             objetSongs.setAdapter(new SongAdapter(songsOfThisAlbum, homepageActivity, new Callable<Void>() {
                                 @Override
                                 public Void call() throws Exception {
-                                    dialog.dismiss();
+                                    homepageActivity.songListDialog.dismiss();
                                     homepageActivity.openPlayerScreen(true);
                                     return null;
                                 }
@@ -175,7 +175,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                     if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
                     else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
 
-                    dialog.dismiss();
+                    homepageActivity.songListDialog.dismiss();
                     homepageActivity.openPlayerScreen(true);
                 });
 
@@ -190,10 +190,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                     if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
                     else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
 
-                    dialog.dismiss();
+                    homepageActivity.songListDialog.dismiss();
                     homepageActivity.openPlayerScreen(true);
                 });
-                dialog.show();
+                homepageActivity.songListDialog.show();
                 RequestQueue requestQueue = Volley.newRequestQueue(homepageActivity);
                 requestQueue.add(jsonObjectRequest);
 

@@ -44,6 +44,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -86,6 +87,8 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
     SharedPreferences sp;
     SharedPreferences.Editor ed;
     public static String PREV_SEARCH_PREF_ID = "SearchSongId";
+
+    BottomSheetDialog playerScreenDialog, songListDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -490,17 +493,13 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
 
                     }
-                    int spamC;
-                    if (songs.size()>=4) spamC=4;
-                    else spamC=songs.size();
+                    int spamC = Math.min(4, songs.size());
 
                     RecyclerView songAD = findViewById(R.id.songsRV);
                     songAD.setAdapter(new SongAdapter(songs, HomepageActivity.this, false));
-                    GridLayoutManager llm = new GridLayoutManager(HomepageActivity.this,spamC, GridLayoutManager.HORIZONTAL,false);
-                    llm.setAutoMeasureEnabled(true);
-                    songAD.setLayoutManager(llm);
+                    songAD.setLayoutManager(new GridLayoutManager(HomepageActivity.this,spamC, RecyclerView.HORIZONTAL,false));
 //                    songAD.setHasFixedSize(true);
-                    songAD.setNestedScrollingEnabled(false);
+//                    songAD.setNestedScrollingEnabled(false);
 
 //                    Log.d("debugTestLength", songs.size()+">>"+songs.get(songs.size()-1).getName());
 
@@ -539,31 +538,31 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
     }
 
     public void openPlayerScreen(Boolean openUpcomingSongsList) {
-        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        playerScreenDialog = new BottomSheetDialog(this);
         View contentView = LayoutInflater.from(this).inflate(R.layout.playing_music, null);
-        dialog.setContentView(contentView);
+        playerScreenDialog.setContentView(contentView);
 //        View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
         View bottomSheet = (View) contentView.getParent();
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED); // Set the initial state to expanded
 
-        ImageView dismiss = dialog.findViewById(R.id.dismiss);
+        ImageView dismiss = playerScreenDialog.findViewById(R.id.dismiss);
         dismiss.setOnClickListener(v -> {
-            dialog.dismiss();
+            playerScreenDialog.dismiss();
         });
 
-        dialog.setOnDismissListener(dialog1 -> {
+        playerScreenDialog.setOnDismissListener(dialog1 -> {
             isPlayerScreenShown = false;
         });
 
-        ImageView upcomingSong = dialog.findViewById(R.id.upcomingSong);
+        ImageView upcomingSong = playerScreenDialog.findViewById(R.id.upcomingSong);
         upcomingSong.setOnClickListener(v -> {
-            showUpcomingSongs(dialog);
+            showUpcomingSongs(playerScreenDialog);
         });
-        LottieAnimationView playPauseBtn = dialog.findViewById(R.id.playPauseBtn);
+        LottieAnimationView playPauseBtn = playerScreenDialog.findViewById(R.id.playPauseBtn);
         if (openUpcomingSongsList) {
             new Handler().postDelayed(() -> {
-                showUpcomingSongs(dialog);
+                showUpcomingSongs(playerScreenDialog);
                 if (player != null) {
                     if (!player.isPlaying()) {
                         playPauseBtn.setMinFrame(66);
@@ -594,11 +593,11 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             }
         }
 
-        ImageView playPlaying = dialog.findViewById(R.id.playButton);
-        ImageView pausePlaying = dialog.findViewById(R.id.pauseButton);
-        ImageView nextPlaying = dialog.findViewById(R.id.nextButton);
-        ImageView previousPlaying = dialog.findViewById(R.id.previousBTN);
-        SeekBar seekbarPlaying = dialog.findViewById(R.id.seekPlaying);
+        ImageView playPlaying = playerScreenDialog.findViewById(R.id.playButton);
+        ImageView pausePlaying = playerScreenDialog.findViewById(R.id.pauseButton);
+        ImageView nextPlaying = playerScreenDialog.findViewById(R.id.nextButton);
+        ImageView previousPlaying = playerScreenDialog.findViewById(R.id.previousBTN);
+        SeekBar seekbarPlaying = playerScreenDialog.findViewById(R.id.seekPlaying);
 
         playPlaying.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -648,12 +647,12 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
 //        behavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottomsheet_height));
 
-        TextView songName = dialog.findViewById(R.id.songNameBS);
-        TextView artistName = dialog.findViewById(R.id.artistNameBS);
+        TextView songName = playerScreenDialog.findViewById(R.id.songNameBS);
+        TextView artistName = playerScreenDialog.findViewById(R.id.artistNameBS);
 
         isPlayerScreenShown = true;
-        updatePlayerScreen(dialog);
-        dialog.show();
+        updatePlayerScreen(playerScreenDialog);
+        playerScreenDialog.show();
 
         songName.setSelected(true);
         artistName.setSelected(true);
@@ -661,22 +660,22 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
     }
 
     public void showUpcomingSongs(BottomSheetDialog parentDialog) {
-        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        songListDialog = new BottomSheetDialog(this);
         View songs = LayoutInflater.from(this).inflate(R.layout.songlis_bottomsheet, null);
-        dialog.setContentView(songs);
+        songListDialog.setContentView(songs);
 
 
-        TextView name = dialog.findViewById(R.id.albumName);
+        TextView name = songListDialog.findViewById(R.id.albumName);
         name.setText("Currently Playing");
 
-        ((ImageView) dialog.findViewById(R.id.dismiss)).setOnClickListener(v -> {
-            dialog.dismiss();
+        ((ImageView) songListDialog.findViewById(R.id.dismiss)).setOnClickListener(v -> {
+            songListDialog.dismiss();
         });
 
-        ((ImageView) dialog.findViewById(R.id.songImage)).setVisibility(View.GONE);
-        ((ImageView) dialog.findViewById(R.id.playAll)).setVisibility(View.GONE);
-        ((ImageView) dialog.findViewById(R.id.shuffle)).setVisibility(View.GONE);
-        RecyclerView songRV = dialog.findViewById(R.id.songsRV);
+        ((ImageView) songListDialog.findViewById(R.id.songImage)).setVisibility(View.GONE);
+        ((ImageView) songListDialog.findViewById(R.id.playAll)).setVisibility(View.GONE);
+        ((ImageView) songListDialog.findViewById(R.id.shuffle)).setVisibility(View.GONE);
+        RecyclerView songRV = songListDialog.findViewById(R.id.songsRV);
         songRV.setAdapter(new SongAdapter(currentlyPlaying, HomepageActivity.this, new Callable<Void>() {
             @Override
             public Void call() throws Exception {
@@ -700,10 +699,10 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         }));
         songRV.setHasFixedSize(true);
         songRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        dialog.show();
+        songListDialog.show();
         new Handler().postDelayed(() -> {
             int height = songRV.getChildAt(curPos).getHeight();
-            NestedScrollView nestedScrollView = dialog.findViewById(R.id.scrollView);
+            NestedScrollView nestedScrollView = songListDialog.findViewById(R.id.scrollView);
             nestedScrollView.smoothScrollTo(0, curPos * height);
         }, 100);
 
@@ -893,7 +892,11 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
             curPos = pos;
             updateCurrentPlaying(songModel);
-
+            ((RecyclerView)findViewById(R.id.songsRV)).getAdapter().notifyDataSetChanged();;
+            if (songListDialog!= null && songListDialog.isShowing()){
+                ((RecyclerView)songListDialog.findViewById(R.id.songsRV)).getAdapter().notifyDataSetChanged();
+//                SongAdapter songAdapter = (SongAdapter)((RecyclerView)songListDialog.findViewById(R.id.songsRV)).getAdapter();
+            }
         } catch (Exception e) {
             Toast.makeText(this, "Unable to play this song", Toast.LENGTH_SHORT).show();
         }

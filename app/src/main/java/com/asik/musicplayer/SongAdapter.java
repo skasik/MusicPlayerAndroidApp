@@ -168,11 +168,15 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                     artistName.setTextColor(homepageActivity.getResources().getColor(R.color.black));
                     duration.setTextColor(homepageActivity.getResources().getColor(R.color.black));
                     dot.setImageTintList(ColorStateList.valueOf(homepageActivity.getResources().getColor(R.color.black)));
-                    if (homepageActivity.player != null) {
-                        if (homepageActivity.player.isPlaying())
-                            playingAnim.setVisibility(View.VISIBLE);
-                        else playingAnim.setVisibility(View.INVISIBLE);
-                    }
+
+                    playingAnim.setVisibility(View.INVISIBLE);
+                    new Handler().postDelayed(() -> {
+                        if (homepageActivity.player != null) {
+                            if (homepageActivity.player.isPlaying())
+                                playingAnim.setVisibility(View.VISIBLE);
+                            else playingAnim.setVisibility(View.INVISIBLE);
+                        }
+                    }, 500);
 
                 } else {
                     playMusic.setBackgroundColor(homepageActivity.getResources().getColor(R.color.background));
@@ -184,9 +188,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                 }
             }
 
-            new Handler().postDelayed(() -> {
-                checkIfPlaying(songModel);
-            }, 100);
+//            new Handler().postDelayed(() -> {
+//                checkIfPlaying(songModel);
+//            }, 100);
         }
 
         private void loadRecommendedSongs(SongModel songModel, Callable<Void> afterResponse) {

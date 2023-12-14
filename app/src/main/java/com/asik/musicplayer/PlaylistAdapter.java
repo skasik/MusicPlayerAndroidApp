@@ -84,25 +84,25 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
             playlistClick.setOnClickListener(v -> {
                 ArrayList<SongModel> songsOfPlaylist = new ArrayList<>();
-                BottomSheetDialog dialog = new BottomSheetDialog(homepageActivity);
+                homepageActivity.songListDialog = new BottomSheetDialog(homepageActivity);
                 View songsView = LayoutInflater.from(homepageActivity).inflate(R.layout.songlis_bottomsheet,null);
-                dialog.setContentView(songsView);
+                homepageActivity.songListDialog.setContentView(songsView);
 
 
                 View bottomSheet = (View) songsView.getParent();
                 BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED); // Set the initial state to expanded
 
-                ImageView dismiss = dialog.findViewById(R.id.dismiss);
+                ImageView dismiss = homepageActivity.songListDialog.findViewById(R.id.dismiss);
 
-                ImageView playAll = dialog.findViewById(R.id.playAll);
-                ImageView shuffle = dialog.findViewById(R.id.shuffle);
+                ImageView playAll = homepageActivity.songListDialog.findViewById(R.id.playAll);
+                ImageView shuffle = homepageActivity.songListDialog.findViewById(R.id.shuffle);
                 dismiss.setOnClickListener(v1 -> {
-                    dialog.dismiss();
+                    homepageActivity.songListDialog.dismiss();
                 });
 
-                TextView playlistName = dialog.findViewById(R.id.albumName);
-                ImageView im = dialog.findViewById(R.id.songImage);
+                TextView playlistName = homepageActivity.songListDialog.findViewById(R.id.albumName);
+                ImageView im = homepageActivity.songListDialog.findViewById(R.id.songImage);
                 Glide.with(homepageActivity).load(playlistModel.getImage()).into(im);
                 playlistName.setText(playlistModel.getName());
                 playlistName.setSelected(true);
@@ -135,11 +135,11 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
                             }
                             Log.d("debugtest", String.valueOf(songsOfPlaylist.size()));
-                            RecyclerView playlist = dialog.findViewById(R.id.songsRV);
+                            RecyclerView playlist = homepageActivity.songListDialog.findViewById(R.id.songsRV);
                             playlist.setAdapter(new SongAdapter(songsOfPlaylist, homepageActivity, new Callable<Void>() {
                                 @Override
                                 public Void call() throws Exception {
-                                    dialog.dismiss();
+                                    homepageActivity.songListDialog.dismiss();
                                     homepageActivity.openPlayerScreen(true);
                                     return null;
                                 }
@@ -174,7 +174,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                     if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
                     else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
 
-                    dialog.dismiss();
+                    homepageActivity.songListDialog.dismiss();
                     homepageActivity.openPlayerScreen(true);
                 });
 
@@ -189,10 +189,10 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                     if (firstSong.getDownloadUrl().equals("")) homepageActivity.fetchSongDownloadURL(firstSong,homepageActivity.curPos);
                     else homepageActivity.startPlayingSong(firstSong,homepageActivity.curPos);
 
-                    dialog.dismiss();
+                    homepageActivity.songListDialog.dismiss();
                     homepageActivity.openPlayerScreen(true);
                 });
-                dialog.show();
+                homepageActivity.songListDialog.show();
             });
 
         }

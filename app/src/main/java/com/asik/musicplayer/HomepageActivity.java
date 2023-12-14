@@ -3,6 +3,7 @@ package com.asik.musicplayer;
 import static com.asik.musicplayer.MusicApplication.ACTION_NEXT;
 import static com.asik.musicplayer.MusicApplication.ACTION_PLAY;
 import static com.asik.musicplayer.MusicApplication.ACTION_PREV;
+import static com.asik.musicplayer.MusicApplication.CHANNEL1_ID;
 import static com.asik.musicplayer.MusicApplication.CHANNEL2_ID;
 
 import androidx.activity.OnBackPressedCallback;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -30,12 +32,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
+import android.media.MediaMetadata;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -161,7 +165,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, this, BIND_AUTO_CREATE);
-        mediaSessionCompat = new MediaSessionCompat(this, "My Music");
+        mediaSessionCompat = new MediaSessionCompat(this, CHANNEL2_ID);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -769,12 +773,12 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             if (player != null && player.isPlaying()) {
                 play.setVisibility(View.GONE);
                 pause.setVisibility(View.VISIBLE);
-                showNotification(R.drawable.pause);
+//                showNotification(R.drawable.pause);
             }
             if (player != null && !player.isPlaying()) {
                 pause.setVisibility(View.GONE);
                 play.setVisibility(View.VISIBLE);
-                showNotification(R.drawable.play);
+//                showNotification(R.drawable.play);
             }
 
             updateSeekbar();
@@ -1048,16 +1052,16 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
     void showNotification(int playPauseBtn) {
         Intent intent = new Intent(this, HomepageActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Intent prevIntent = new Intent(this, NotificationReceiver.class).setAction(ACTION_PREV);
-        PendingIntent prevPendingIntent = PendingIntent.getBroadcast(this, 0, prevIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent prevPendingIntent = PendingIntent.getBroadcast(this, 0, prevIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Intent pauseIntent = new Intent(this, NotificationReceiver.class).setAction(ACTION_PLAY);
-        PendingIntent pausePendingIntent = PendingIntent.getBroadcast(this, 0, pauseIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pausePendingIntent = PendingIntent.getBroadcast(this, 0, pauseIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Intent nextIntent = new Intent(this, NotificationReceiver.class).setAction(ACTION_NEXT);
-        PendingIntent nextPendingIntent = PendingIntent.getBroadcast(this, 0, nextIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent nextPendingIntent = PendingIntent.getBroadcast(this, 0, nextIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background);
         try {
@@ -1069,7 +1073,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         }
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL2_ID)
-                .setSmallIcon(playPauseBtn)
+                .setSmallIcon(R.drawable.fav_button)
                 .setLargeIcon(largeIcon)
                 .setContentTitle(currentlyPlaying.get(curPos).getName())
                 .setContentText(currentlyPlaying.get(curPos).getFeaturedArtists())
@@ -1078,11 +1082,19 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                 .addAction(R.drawable.next, "Next", nextPendingIntent)
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0, 1, 2)
-                        .setMediaSession(mediaSessionCompat.getSessionToken()))
-                .setPriority(NotificationCompat.PRIORITY_LOW)
+                                .setMediaSession(mediaSessionCompat.getSessionToken())
+//                        .setMediaSession(mediaSessionCompat.getSessionToken())
+                )
+                .setPriority(NotificationCompat.PRIORITY_MAX)
 //                .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true)
                 .build();
+
+        mediaSessionCompat.setMetadata(
+                new MediaMetadataCompat.Builder()
+                        .putString(MediaMetadata.METADATA_KEY_TITLE,currentlyPlaying.get(curPos).getName())
+                        .putString(MediaMetadata.METADATA_KEY_ARTIST,currentlyPlaying.get(curPos).getFeaturedArtists())
+                        .build());
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {

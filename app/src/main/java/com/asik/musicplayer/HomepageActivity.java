@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,12 +64,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
+
 
 public class HomepageActivity extends AppCompatActivity implements ActionPlaying, ServiceConnection {
 
     MediaPlayer player;
     ArrayList<SongModel> currentlyPlaying = new ArrayList<>();
+    ArrayList<SongModel> recentlyPlayed = new ArrayList<>();
     int curPos = 0;
     ImageView play;
     ImageView pause;
@@ -81,6 +85,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
     String languageParam = "";
     SharedPreferences sp;
     SharedPreferences.Editor ed;
+    public static String PREV_SEARCH_PREF_ID = "SearchSongId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,9 +114,18 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             }
         });
         ImageView search = findViewById(R.id.searchButton);
+
         search.setOnClickListener(v -> {
+
+            ((TextView) findViewById(R.id.preSearName)).setVisibility(View.VISIBLE);
             ((LinearLayout) findViewById(R.id.searchLayout)).setVisibility(View.VISIBLE);
             ((LinearLayout) findViewById(R.id.homeScreen)).setVisibility(View.GONE);
+            String spd="https://saavn.me/songs?id=";
+            String ids = sp.getString(PREV_SEARCH_PREF_ID,"");
+            if (!ids.equals(""))spd+=ids;
+            Log.d("idTest",spd);
+            searchSongs(spd,true);
+
             new Handler().postDelayed(() -> {
                 ((EditText) findViewById(R.id.searchElementID)).requestFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -130,8 +144,12 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         searched.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                ((TextView) findViewById(R.id.preSearName)).setVisibility(View.GONE);
+                ((RecyclerView) findViewById(R.id.previouslySearched)).setVisibility(View.GONE);
+
                 String searchQuery = searched.getText().toString().trim().toLowerCase();
-                searchSongs(searchAPI + Uri.encode(searchQuery));
+                searchSongs(searchAPI + Uri.encode(searchQuery),false);
                 hideKeyboard(HomepageActivity.this);
                 return true;
             }
@@ -148,8 +166,11 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             }
         }
 
+
         sp = getSharedPreferences("music_prefs", MODE_PRIVATE);
         ed = sp.edit();
+
+
 
         View playing = findViewById(R.id.playing);
         CardView playingImage = findViewById(R.id.card);
@@ -233,6 +254,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                     Log.d("debugTest", languageParam);
                     loadHomePage(languageParam);
                     ed.putString("languages", languageParam).commit();
+
                 }
 
 //                loadHomePage(languageModel.getParameter());
@@ -266,14 +288,15 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
     }
 
-    private void searchSongs(String s) {
+    private void searchSongs(String s,Boolean bool) {
         ArrayList<SongModel> searchedSongs = new ArrayList<>();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(s, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-
-                    JSONArray results = response.getJSONObject("data").getJSONArray("results");
+                    JSONArray results;
+                    if (!bool) results = response.getJSONObject("data").getJSONArray("results");
+                    else results = response.getJSONArray("data");
                     for (int i = 0; i < results.length(); i++) {
                         SongModel songModel = new SongModel();
                         songModel.setName(results.getJSONObject(i).getString("name"));
@@ -294,7 +317,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                     RecyclerView searchedRV = findViewById(R.id.searchItemRV);
                     searchedRV.setAdapter(new SongAdapter(searchedSongs, HomepageActivity.this, true));
                     searchedRV.setHasFixedSize(true);
-                    searchedRV.setLayoutManager(new LinearLayoutManager(HomepageActivity.this, LinearLayoutManager.VERTICAL, false));
+                    searchedRV.setLayoutManager(new LinearLayoutManager(HomepageActivity.this, LinearLayoutManager.VERTICAL, bool));
 
                 } catch (Exception e) {
                     Toast.makeText(HomepageActivity.this, "Not Found", Toast.LENGTH_SHORT).show();
@@ -467,10 +490,13 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
 
                     }
+                    int spamC;
+                    if (songs.size()>=4) spamC=4;
+                    else spamC=songs.size();
 
                     RecyclerView songAD = findViewById(R.id.songsRV);
                     songAD.setAdapter(new SongAdapter(songs, HomepageActivity.this, false));
-                    LinearLayoutManager llm = new LinearLayoutManager(HomepageActivity.this, LinearLayoutManager.VERTICAL, false);
+                    GridLayoutManager llm = new GridLayoutManager(HomepageActivity.this,spamC, GridLayoutManager.HORIZONTAL,false);
                     llm.setAutoMeasureEnabled(true);
                     songAD.setLayoutManager(llm);
 //                    songAD.setHasFixedSize(true);
@@ -807,9 +833,29 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
     void startPlayingSong(SongModel songModel, int pos) {
         try {
+
+//            recentlyPlayed.add(songModel);
+//            String oldId =sp.getString("songID","");
+//            Log.d("SongId",oldId);
+//            ArrayList<String> ids = new ArrayList(Arrays.asList(oldId.split(",")));
+//            for (int j = 0 ;j<ids.size();j++){
+//                if (ids.get(j).equals(songModel.getId())) ids.remove(j);
+//            }
+//            ids.add(songModel.getId());
+//            if (ids.size()>20) ids = (ArrayList<String>) ids.subList(1,ids.size()-1);
+//            String newId="" ;
+//            for (int i=0;i<ids.size();i++){
+//                if(!newId.equals("")) newId+=",";
+//                newId+=ids.get(i);
+//            }
+//            ed.putString("songID","").commit();
+//            ed.putString("songID",newId).commit();
+
+
+//            currentlyPlaying.subList(currentlyPlaying.size()-20, currentlyPlaying.size());
             if (pos == currentlyPlaying.size() - 1) {
                 loadRecommendedSongs(currentlyPlaying.get(pos));
-                Log.d("debugTest", String.valueOf(pos));
+
             }
             if (player != null) {
                 player.stop();
@@ -819,6 +865,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             player = new MediaPlayer();
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             player.setDataSource(this, Uri.parse(songModel.getDownloadUrl()));
+            Log.d("debugTest2", songModel.getDownloadUrl());
             player.prepare();
             player.setOnPreparedListener(mp -> {
                 mp.start();

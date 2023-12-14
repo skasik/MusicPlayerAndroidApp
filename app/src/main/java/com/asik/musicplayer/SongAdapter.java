@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 import kotlin.Unit;
@@ -108,9 +109,27 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
             playMusic.setOnClickListener(v -> {
                 if (aBoolean) {
+                    String prevSearch = homepageActivity.sp.getString(HomepageActivity.PREV_SEARCH_PREF_ID, "");
+                    Log.d("SearchSongId", prevSearch);
+                    ArrayList<String> ids = new ArrayList(Arrays.asList(prevSearch.split(",")));
+                    for (int j = 0; j < ids.size(); j++) {
+                        if (ids.get(j).equals(songModel.getId())) ids.remove(j);
+                    }
+                    ids.add(songModel.getId());
+                    if (ids.size() > 20) ids = (ArrayList<String>) ids.subList(1, ids.size() - 1);
+                    String newId = "";
+                    for (int i = 0; i < ids.size(); i++) {
+                        if (!newId.equals("")) newId += ",";
+                        newId += ids.get(i);
+                    }
+
+                    homepageActivity.ed.putString(HomepageActivity.PREV_SEARCH_PREF_ID, newId).commit();
                     loadRecommendedSongs(songModel, new Callable<Void>() {
+
                         @Override
                         public Void call() throws Exception {
+
+
                             if (songModel.getDownloadUrl().equals(""))
                                 homepageActivity.fetchSongDownloadURL(homepageActivity.currentlyPlaying.get(homepageActivity.curPos), homepageActivity.curPos);
                             else {

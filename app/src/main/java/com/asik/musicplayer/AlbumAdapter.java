@@ -105,9 +105,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                     dialog.dismiss();
                 });
 
-                TextView albname = dialog.findViewById(R.id.albumName);
-                albname.setSelected(true);
-                albname.setText(albumModel.getName());
+                TextView albumen = dialog.findViewById(R.id.albumName);
+                albumen.setSelected(true);
+                albumen.setText(albumModel.getName());
 
                 ImageView im = dialog.findViewById(R.id.songImage);
                 Glide.with(homepageActivity).load(albumModel.getImage()).into(im);

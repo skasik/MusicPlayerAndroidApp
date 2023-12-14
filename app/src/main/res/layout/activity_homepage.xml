@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottomParent"
-
+        android:visibility="visible"
         >
 
         <LinearLayout
@@ -27,7 +27,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:visibility="visible"
+                >
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -287,11 +289,28 @@
                         android:maxLines="1" />
 
                 </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_extrabold"
+                    android:text="Previously Searched"
+                    android:textColor="@color/text_color1"
+                    android:textSize="30sp"
+                    android:id="@+id/preSearName"
+
+                    />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/searchItemRV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+                <androidx.recyclerview.widget.RecyclerView
+
+                    android:id="@+id/previouslySearched"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
 
 
             </LinearLayout>

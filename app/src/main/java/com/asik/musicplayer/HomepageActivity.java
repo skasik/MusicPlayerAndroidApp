@@ -853,12 +853,12 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
 
 //            currentlyPlaying.subList(currentlyPlaying.size()-20, currentlyPlaying.size());
-            currentlyPlaying.forEach(c1->{
-                loadRecommendedSongs(c1);
+            if (pos == currentlyPlaying.size() - 1) {
+                loadRecommendedSongs(currentlyPlaying.get(pos));
 
                 Log.d("debugTest3", String.valueOf(pos));
 
-            });
+            }
 
             Log.d("debugTest4", String.valueOf(currentlyPlaying.size()));
             if (player != null) {
@@ -879,12 +879,11 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                 @Override
                 public void onCompletion(MediaPlayer mp) {
 
-                    currentlyPlaying.forEach(c1->{
-                        loadRecommendedSongs(c1);
+                    if (pos == currentlyPlaying.size() - 1) {
+                        loadRecommendedSongs(currentlyPlaying.get(pos));
 
-                        Log.d("debugTest3", String.valueOf(pos));
-
-                    });
+                        Log.d("debugTest", String.valueOf(pos));
+                    }
                     playNextSong();
                 }
 
@@ -962,12 +961,10 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
     }
 
     void fetchSongDownloadURL(SongModel song, int pos) {
-        currentlyPlaying.forEach(c1->{
-            loadRecommendedSongs(c1);
-
-            Log.d("debugTest3", String.valueOf(pos));
-
-        });
+        if (pos == currentlyPlaying.size() - 1) {
+            loadRecommendedSongs(currentlyPlaying.get(pos));
+            Log.d("debugTest5", String.valueOf(pos));
+        }
         String API_LINK = "https://saavn.me/songs?id=" + song.getId();
         Toast.makeText(this, "Loading song...", Toast.LENGTH_SHORT).show();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API_LINK, new Response.Listener<JSONObject>() {

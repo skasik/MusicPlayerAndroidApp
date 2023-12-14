@@ -853,10 +853,14 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
 
 //            currentlyPlaying.subList(currentlyPlaying.size()-20, currentlyPlaying.size());
-            if (pos == currentlyPlaying.size() - 1) {
-                loadRecommendedSongs(currentlyPlaying.get(pos));
+            currentlyPlaying.forEach(c1->{
+                loadRecommendedSongs(c1);
 
-            }
+                Log.d("debugTest3", String.valueOf(pos));
+
+            });
+
+            Log.d("debugTest4", String.valueOf(currentlyPlaying.size()));
             if (player != null) {
                 player.stop();
                 player.reset();
@@ -875,9 +879,12 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                 @Override
                 public void onCompletion(MediaPlayer mp) {
 
-                    if (pos == currentlyPlaying.size() - 1) {
-                        loadRecommendedSongs(currentlyPlaying.get(pos));
-                    }
+                    currentlyPlaying.forEach(c1->{
+                        loadRecommendedSongs(c1);
+
+                        Log.d("debugTest3", String.valueOf(pos));
+
+                    });
                     playNextSong();
                 }
 
@@ -900,8 +907,8 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         artistID.forEach(v1 -> {
             String recAPI = recommendedSongsAPI + v1.trim() + "/recommendations/" + ss;
 
-            Log.d("debugTest", recAPI);
-            Log.d("debugTest", v1);
+            Log.d("debugTest6", recAPI);
+            Log.d("debugTest7", v1);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(recAPI, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -926,7 +933,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                                 }
 
                             }
-                            if(bool==true)currentlyPlaying.add(recommended);
+                            if(bool)currentlyPlaying.add(recommended);
 
                         }
 
@@ -955,10 +962,12 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
     }
 
     void fetchSongDownloadURL(SongModel song, int pos) {
-        if (pos == currentlyPlaying.size() - 1) {
-            loadRecommendedSongs(currentlyPlaying.get(pos));
-            Log.d("debugTest", String.valueOf(pos));
-        }
+        currentlyPlaying.forEach(c1->{
+            loadRecommendedSongs(c1);
+
+            Log.d("debugTest3", String.valueOf(pos));
+
+        });
         String API_LINK = "https://saavn.me/songs?id=" + song.getId();
         Toast.makeText(this, "Loading song...", Toast.LENGTH_SHORT).show();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API_LINK, new Response.Listener<JSONObject>() {

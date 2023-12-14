@@ -892,13 +892,22 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
 
             curPos = pos;
             updateCurrentPlaying(songModel);
+            updateUI();
+        } catch (Exception e) {
+            Toast.makeText(this, "Unable to play this song", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateUI() {
+        try {
             ((RecyclerView)findViewById(R.id.songsRV)).getAdapter().notifyDataSetChanged();;
             if (songListDialog!= null && songListDialog.isShowing()){
                 ((RecyclerView)songListDialog.findViewById(R.id.songsRV)).getAdapter().notifyDataSetChanged();
 //                SongAdapter songAdapter = (SongAdapter)((RecyclerView)songListDialog.findViewById(R.id.songsRV)).getAdapter();
             }
-        } catch (Exception e) {
-            Toast.makeText(this, "Unable to play this song", Toast.LENGTH_SHORT).show();
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -1088,11 +1097,13 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
     @Override
     public void nextClicked() {
         playNextSong();
+        updateUI();
     }
 
     @Override
     public void prevClicked() {
         playPrevSong();
+        updateUI();
     }
 
     @Override
@@ -1104,5 +1115,6 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
                 play.callOnClick();
             }
         }
+        updateUI();
     }
 }

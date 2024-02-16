@@ -55,6 +55,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.L;
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -121,6 +122,20 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             }
         });
         ImageView search = findViewById(R.id.searchButton);
+        ImageView favButton = findViewById(R.id.favButton);
+        favButton.setOnClickListener(v -> {
+
+            ((LinearLayout) findViewById(R.id.searchLayout)).setVisibility(View.VISIBLE);
+            ((EditText) findViewById(R.id.searchElementID)).setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.preSearName)).setText("Favourite Songs");
+            ((LinearLayout) findViewById(R.id.homeScreen)).setVisibility(View.GONE);
+            String spd="https://saavn.me/songs?id=";
+            String ids = sp.getString("favMusic","");
+            if (!ids.equals(""))spd+=ids;
+            Log.d("idTest",spd);
+            searchSongs(spd,true);
+
+        });
 
         search.setOnClickListener(v -> {
 
@@ -153,7 +168,6 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
                 ((TextView) findViewById(R.id.preSearName)).setVisibility(View.GONE);
-                ((RecyclerView) findViewById(R.id.previouslySearched)).setVisibility(View.GONE);
 
                 String searchQuery = searched.getText().toString().trim().toLowerCase();
                 searchSongs(searchAPI + Uri.encode(searchQuery),false);
@@ -555,6 +569,47 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
             playerScreenDialog.dismiss();
         });
 
+        ImageView makeFavourite = playerScreenDialog.findViewById(R.id.favInItBTN);
+        ImageView favAl = playerScreenDialog.findViewById(R.id.favBTN);
+
+        String fav = sp.getString("favMusic","");
+        if(fav.contains(currentlyPlaying.get(curPos).getId())){
+            makeFavourite.setVisibility(View.GONE);
+            favAl.setVisibility(View.VISIBLE);
+        }
+
+        makeFavourite.setOnClickListener(v -> {
+
+            String fav1 = sp.getString("favMusic","");
+            makeFavourite.setVisibility(View.GONE);
+            favAl.setVisibility(View.VISIBLE);
+            ArrayList<String> ids = new ArrayList<>(Arrays.asList(fav1.split(",")));
+            ids.add(currentlyPlaying.get(curPos).getId());
+            String newId = "";
+            for (int i = 0; i < ids.size(); i++) {
+                if (!newId.equals("")) newId += ",";
+                newId += ids.get(i);
+            }
+            ed.putString("favMusic",newId).commit();
+        });
+        favAl.setOnClickListener(v -> {
+
+            String fav2 = sp.getString("favMusic","");
+            makeFavourite.setVisibility(View.VISIBLE);
+            favAl.setVisibility(View.GONE);
+            ArrayList<String> ids = new ArrayList(Arrays.asList(fav2.split(",")));
+            for (int j = 0; j < ids.size(); j++) {
+                if (ids.get(j).equals(currentlyPlaying.get(curPos).getId())) ids.remove(j);
+            }
+
+            String newId = "";
+            for (int i = 0; i < ids.size(); i++) {
+                if (!newId.equals("")) newId += ",";
+                newId += ids.get(i);
+            }
+            ed.putString("favMusic",newId).commit();
+        });
+
         playerScreenDialog.setOnDismissListener(dialog1 -> {
             isPlayerScreenShown = false;
         });
@@ -603,6 +658,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         ImageView previousPlaying = playerScreenDialog.findViewById(R.id.previousBTN);
         SeekBar seekbarPlaying = playerScreenDialog.findViewById(R.id.seekPlaying);
 
+
         playPlaying.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -622,13 +678,29 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         nextPlaying.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(playPauseBtn.isAnimating()) playPauseBtn.cancelAnimation();
+
+                playPauseBtn.setMinFrame(29);
+                playPauseBtn.setMaxFrame(30);
+                playPauseBtn.playAnimation();
+
                 playNextSong();
+
             }
+
         });
         previousPlaying.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(playPauseBtn.isAnimating()) playPauseBtn.cancelAnimation();
+
+                playPauseBtn.setMinFrame(29);
+                playPauseBtn.setMaxFrame(30);
+                playPauseBtn.playAnimation();
+
                 playPrevSong();
+
             }
         });
         seekbarPlaying.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -725,6 +797,7 @@ public class HomepageActivity extends AppCompatActivity implements ActionPlaying
         else {
             startPlayingSong(songModel, curPos);
         }
+
     }
 
     public void playPrevSong() {
